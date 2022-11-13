@@ -59,8 +59,8 @@ public class GameController {
     }
     
     private void checkWin(){
-        for (int row = 1; row <= b.getBoardSize(); row++){
-            for (int col = 1; col <= b.getBoardSize(); col++){
+        for (int row = 0; row < b.getBoardSize(); row++){
+            for (int col = 0; col < b.getBoardSize(); col++){
                 Tile t = b.getTile(row,col);
                 if (t.getValue() == winningValue){
                     status = GameStatus.WON;
@@ -70,45 +70,73 @@ public class GameController {
     }
     
     private void checkLoss(){
-        for (int row = 1; row <= b.getBoardSize(); row++){
-            for (int col = 1; col <= b.getBoardSize(); col++){
-                Tile t = b.getTile(row,col);
-                if ((t.getValue() != winningValue) && (!b.hasEmpty())){
-                    status = GameStatus.LOST;
+    	if (!b.hasEmpty()) {
+            for (int row = 0; row < b.getBoardSize(); row++){
+                for (int col = 0; col < b.getBoardSize(); col++){
+                    Tile t = b.getTile(row,col);
+                    if ((t.getValue() != winningValue) && (!findSimilarNeighbors(row, col))){
+                        status = GameStatus.LOST;
+                    }
                 }
             }
-        }
+    	}
     }
     
     private boolean findSimilarNeighbors(int row, int col){
-        boolean neighbors;
-        int givenValue = b.getValue(row,col);
-        int upValue = b.getValue(row + 1,col);
-        int downValue = b.getValue(row - 1,col);
-        int leftValue = b.getValue(row,col - 1);
-        int rightValue = b.getValue(row, col + 1);
-
-        if (b.getValue(row,col) == -1){
-            throw new IllegalArgumentException();
-        }
-        else if (givenValue == upValue){
-            neighbors = true;
-        }
-        else if (givenValue == downValue){
-            neighbors = true;
-        }
-        else if (givenValue == leftValue){
-            neighbors = true;
-        }
-        else if (givenValue == rightValue){
-            neighbors = true;
-        }
-        else {
-            neighbors = false;
+        boolean neighbors = false;
+        int givenValue = b.getValue(row, col);
+        //if tile not null
+        if (givenValue != -1) { 
+            //check value of tile above
+            if (row != 0) {
+            	int upValue = b.getValue(row - 1, col);
+            	if (givenValue == upValue){
+                    neighbors = true;
+                }
+            }
+            
+            //check value of tile below
+            if (row != b.getBoardSize() - 1) {
+            	int downValue = b.getValue(row + 1, col);
+            	if (givenValue == downValue){
+                    neighbors = true;
+                }
+            }
+            
+            //check value of tile to the left
+            if (col != 0) {
+            	int leftValue = b.getValue(row, col - 1);
+            	if (givenValue == leftValue){
+                    neighbors = true;
+                }
+            }
+            
+            //check value of tile to the right
+            if (col != b.getBoardSize() - 1) {
+            	int rightValue = b.getValue(row, col + 1);
+            	if (givenValue == rightValue){
+                    neighbors = true;
+                }
+            }
         }
         return neighbors;
     }
     
+    /*
+     * Let's consider the case of moving all the Tiles to the left.  
+     * We know that the furthest left column can't move so we can ignore it.  
+     * We start then at the second column and begin checking the cell at the first row.  
+     * There are only a few things that can happen.
+		-	That location is null.  In that case, there is nothing to do!
+		-	The next location we are trying to move to is null.  In that case, we just move our 
+			Tile to that location.
+		-	The next location we are trying to move to has the same value as us. Combine our values into 
+			the Tile at the location to which we wish to move and remove the current one.
+		-	The Tile we wish to move to is not the same value as us.  There is nothing to do.
+
+		After we check the current cell, we can move down to the next row and do the same.
+     */
+
 //    public void recurseLeft(int row){
 //        while (row <= b.getBoardSize()){
 //            int newRow = row;
