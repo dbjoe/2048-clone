@@ -136,107 +136,58 @@ public class GameController {
 
 		After we check the current cell, we can move down to the next row and do the same.
      */
+    
+    public void recurseRight(int row){
 
-//    public void recurseLeft(int row){
-//        while (row <= b.getBoardSize()){
-//            int newRow = row;
-//
-//            for (int y = 2; y <= b.getBoardSize(); y++){
-//                Tile current = b.getTile(row,y);
-//                Tile check = b.getTile(row, y - 1);
-//
-//                if ((current.getValue() != -1) && (check.getValue() != -1) && (current.getValue() == check.getValue())){
-//                    check.setValue((check.getValue()) + (current.getValue()));
-//                    b.delAt(y);
-//                    b.b.insertBefore(null,y);
-//                }
-//                else if ((current.getValue() != -1) && (check.getValue() != -1) && (current.getValue() != check.getValue())) {
-//
-//                }
-//                else if ((current.getValue() == -1) && (check.getValue() != -1)) {
-//
-//                }
-//                else if ((current.getValue() != -1) && (check.getValue() == -1)) {
-//                    b.b.delAt(y - 1);
-//                    b.b.addEnd(null);
-//                    recurseLeft(row);
-//                }
-//                else {
-//
-//                }
-//                newRow = row + 1;
-//                recurseLeft(newRow);
-//            }
-//
-//        }
-//    }
-//    
-//    public void recurseRight(int row){
-//        while (row >= b.getBoardSize()){
-//            int newRow = row;
-//
-//            for (int y = b.getBoardSize() - 1; y >= 1; y--){
-//                Tile current = b.getTile(row,y);
-//                Tile check = b.getTile(row, y + 1);
-//
-//                if ((current.getValue() != -1) && (check.getValue() != -1) && (current.getValue() == check.getValue())){
-//                    check.setValue((check.getValue()) + (current.getValue()));
-//                    b.b.delAt(y);
-//                    b.b.insertBefore(null,y);
-//                }
-//                else if ((current.getValue() != -1) && (check.getValue() != -1) && (current.getValue() != check.getValue())) {
-//
-//                }
-//                else if ((current.getValue() == -1) && (check.getValue() != -1)) {
-//
-//                }
-//                else if ((current.getValue() != -1) && (check.getValue() == -1)) {
-//                    b.b.delAt(y + 1);
-//                    b.b.addBeginning(null);
-//                    recurseRight(row);
-//                }
-//                else {
-//
-//                }
-//                newRow = row + 1;
-//                recurseRight(newRow);
-//            }
-//
-//        }
-//    }
-//    
-//    //TODO: work on recurseDown
-//    public void recurseDown(int col){
-//        while (col <= b.getBoardSize()){
-//            int newCol = col;
-//
-//            for (int x = 2; x <= b.getBoardSize(); x++){
-//                Tile current = b.getTile(x, col);
-//                Tile check = b.getTile(x - 1, col);
-//
-//                if ((current.getValue() != -1) && (check.getValue() != -1) && (current.getValue() == check.getValue())){
-//                    check.setValue((check.getValue()) + (current.getValue()));
-//                    b.b.delAt(x);
-//                    b.b.insertBefore(null, x);
-//                }
-//                else if ((current.getValue() != -1) && (check.getValue() != -1) && (current.getValue() != check.getValue())) {
-//
-//                }
-//                else if ((current.getValue() == -1) && (check.getValue() != -1)) {
-//
-//                }
-//                else if ((current.getValue() != -1) && (check.getValue() == -1)) {
-//                    b.b.delAt(x - 1);
-//                    b.b.addEnd(null);
-//                    recurseLeft(col);
-//                }
-//                else {
-//
-//                }
-//                newCol = col + 1;
-//                recurseLeft(newCol);
-//            }
-//
-//        }
-//    }
+    }
+    
+    public void recurseLeft(int row) {
+
+    }
+    
+    public void recurseUp(int col) {
+    	if (col < b.getBoardSize()) {
+    		for (int i = 0; i < b.getBoardSize() - 2; i++) {
+    			Tile current = b.getTile(i, col);
+    			Tile next = b.getTile(i+1, col);
+    			int x = b.getValue(i, col);
+    			int y = b.getValue(i+1, col);
+    			
+    			if (y == -1) {//if there is nothing in the next tile
+    				//do nothing
+    			}
+    			else if(x == -1) {//if there is nothing in the current tile
+    				b.setTile(i, col, next);
+//    				current.setValue(next.getValue());//set it to the next tile
+    				b.setTile(i+1, col, null);//set the next tile to null
+    				if (col != 0) {
+    					recurseUp(col - 1);//recurse
+    				}
+    				else {
+    					recurseUp(col + 1);
+    				}
+    			}
+    			else if(x != y) {//if both values are not the same
+    				//do nothing
+    			}
+    			else {
+    				Tile doubleTile = new Tile(next.getValue() + current.getValue());
+    				b.setTile(i, col, doubleTile);
+//    				current.setValue(current.getValue() + next.getValue());
+    				b.setTile(i+1, col, null);
+    				if (col != 0) {
+    					recurseUp(col - 1);
+    				}
+    				else {
+    					recurseUp(col + 1);
+    				}
+    			}
+    		}
+    	recurseUp(col+1);
+    	}
+    }
+    
+    public void recurseDown(int col){
+
+    }
 }
