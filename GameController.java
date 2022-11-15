@@ -136,18 +136,93 @@ public class GameController {
 
 		After we check the current cell, we can move down to the next row and do the same.
      */
-    
-    public void recurseRight(int row){
-
-    }
-    
-    public void recurseLeft(int row) {
-
-    }
-    
-    public void recurseUp(int col) {
-    	if (col < b.getBoardSize()) {
+    public void realRecurseLeft(int row) {
+    	if (row < b.getBoardSize()) {
     		for (int i = 0; i < b.getBoardSize() - 2; i++) {
+    			Tile current = b.getTile(row, i);
+    			Tile next = b.getTile(row, i+1);
+    			int x = b.getValue(row, i);
+    			int y = b.getValue(row, i+1);
+    			
+    			if (y == -1) {//if there is nothing in the next tile
+    				//do nothing
+    			}
+    			else if(x == -1) {//if there is nothing in the current tile
+    				b.setTile(row, i, next);
+//    				current.setValue(next.getValue());//set it to the next tile
+    				b.setTile(row, i+1, null);//set the next tile to null
+    				if (row != 0) {
+    					realRecurseLeft(row - 1);//recurse
+    				}
+    				else {
+    					realRecurseLeft(row + 1);
+    				}
+    			}
+    			else if(x != y) {//if both values are not the same
+    				//do nothing
+    			}
+    			else {
+    				Tile doubleTile = new Tile(next.getValue() + current.getValue());
+    				b.setTile(row, i, doubleTile);
+//    				current.setValue(current.getValue() + next.getValue());
+    				b.setTile(row, i+1, null);
+    				if (row != 0) {
+    					realRecurseLeft(row - 1);
+    				}
+    				else {
+    					realRecurseLeft(row + 1);
+    				}
+    			}
+    		}
+    	realRecurseLeft(row+1);
+    	}
+    }
+    
+    public void realRecurseRight(int row) {
+    	if (row < b.getBoardSize()) {
+    		for (int i = b.getBoardSize() - 1; i > 0; i--) {
+    			Tile current = b.getTile(row, i);
+    			Tile next = b.getTile(row, i-1);
+    			int x = b.getValue(row, i);
+    			int y = b.getValue(row, i-1);
+
+    			if (y == -1) {//if there is nothing in the next tile
+    				//do nothing
+    			}
+    			else if(x == -1) {//if there is nothing in the current tile
+    				b.setTile(row, i, next);
+    				//current.setValue(next.getValue());//set it to the next tile
+    				b.setTile(row, i - 1, null);//set the next tile to null
+    				if (row != 0) {
+    					realRecurseRight(row - 1);//recurse
+    				}
+    				else {
+    					realRecurseRight(row + 1);
+    				}
+    			}
+    			else if(x != y) {//if both values are not the same
+    				//do nothing
+    			}
+    			else {
+    				Tile doubleTile = new Tile(next.getValue() + current.getValue());
+    				b.setTile(row, i, doubleTile);
+    				//				current.setValue(current.getValue() + next.getValue());
+    				b.setTile(row, i-1, null);
+    				if (row != 0) {
+    					realRecurseRight(row - 1);
+    				}
+    				else {
+    					realRecurseRight(row + 1);
+    				}
+    			}
+    		}
+    	realRecurseRight(row+1);
+    	}
+    }
+   
+    public void realRecurseUp(int col) {
+    	if (col < b.getBoardSize()) {
+    		for (int i = 0; i < b.getBoardSize() - 1; i++) {
     			Tile current = b.getTile(i, col);
     			Tile next = b.getTile(i+1, col);
     			int x = b.getValue(i, col);
@@ -161,10 +236,10 @@ public class GameController {
 //    				current.setValue(next.getValue());//set it to the next tile
     				b.setTile(i+1, col, null);//set the next tile to null
     				if (col != 0) {
-    					recurseUp(col - 1);//recurse
+    					realRecurseUp(col - 1);//recurse
     				}
     				else {
-    					recurseUp(col + 1);
+    					realRecurseUp(col + 1);
     				}
     			}
     			else if(x != y) {//if both values are not the same
@@ -176,18 +251,56 @@ public class GameController {
 //    				current.setValue(current.getValue() + next.getValue());
     				b.setTile(i+1, col, null);
     				if (col != 0) {
-    					recurseUp(col - 1);
+    					realRecurseUp(col - 1);
     				}
     				else {
-    					recurseUp(col + 1);
+    					realRecurseUp(col + 1);
     				}
     			}
     		}
-    	recurseUp(col+1);
+    	realRecurseUp(col+1);
     	}
     }
     
-    public void recurseDown(int col){
+    public void realRecurseDown(int col) {
+    	if (col < b.getBoardSize()) {
+    		for (int i = b.getBoardSize() - 1; i > 0; i--) {
+    			Tile current = b.getTile(i, col);
+    			Tile next = b.getTile(i - 1, col);
+    			int x = b.getValue(i, col);
+    			int y = b.getValue(i-1, col);
 
+    			if (y == -1) {//if there is nothing in the next tile
+    				//do nothing
+    			}
+    			else if(x == -1) {//if there is nothing in the current tile
+    				b.setTile(i, col, next);//set it to the next tile
+//    				current.setValue(next.getValue());
+    				b.setTile(i - 1, col, null);//set the next tile to null
+    				if (col != 0) {
+    					realRecurseDown(col - 1);//recurse
+    				}
+    				else {
+    					realRecurseDown(col + 1);
+    				}
+    			}
+    			else if(x != y) {//if both values are not the same
+    				//do nothing
+    			}
+    			else {
+    				Tile doubleTile = new Tile(next.getValue() + current.getValue());
+    				b.setTile(i, col, doubleTile);
+    				//				current.setValue(current.getValue() + next.getValue());
+    				b.setTile(i-1, col, null);
+    				if (col != 0) {
+    					realRecurseDown(col - 1);
+    				}
+    				else {
+    					realRecurseDown(col + 1);
+    				}
+    			}
+    		}
+    		realRecurseDown(col + 1);
+    	}
     }
 }
