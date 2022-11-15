@@ -82,7 +82,7 @@ public class Board {
             throw new IllegalArgumentException();
         }
         else {
-        	b.getNodeAt(row).getData().getNodeAt(col).setData(t);
+        	b.getNodeAt(row).getData().getNodeAt(col).setData(t);//TODO: does this break if it's null?
         }
     }
     
@@ -113,8 +113,7 @@ public class Board {
 				}
 				else {
 					System.out.print("["+t+"]");
-				}
-				
+				}	
 			}
 			System.out.println("\n");
 		}

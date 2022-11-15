@@ -1,8 +1,11 @@
 package project3;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.ActionEvent;
 
 public class GamePanel extends JPanel{
@@ -10,20 +13,25 @@ public class GamePanel extends JPanel{
 	private JButton[][] jButtonsBoard;
 	private GameController game;
 	private Board board;
+	
 	private JButton upButton;
 	private JButton downButton;
 	private JButton leftButton;
 	private JButton rightButton;
+	
+	private JMenuItem quit;
+	private JMenuItem reset;
+
 
 	private int BOARD_SIZE;
 
-	public GamePanel(GameController aGame) {
+	public GamePanel(GameController aGame, JMenuItem quitItem, JMenuItem resetItem) {
 		//this.game = game;
 		game = aGame;
+		quit = quitItem;
+		reset = resetItem;
 		board = game.getB();
 		BOARD_SIZE = board.getBoardSize();
-
-		String projectDir = "src/project2/";
 
 		GridLayout layout = new GridLayout(BOARD_SIZE, BOARD_SIZE);
 		JPanel gamePanel = new JPanel();
@@ -35,7 +43,7 @@ public class GamePanel extends JPanel{
 		for (int row = 0; row < BOARD_SIZE; row++)
 			for (int col = 0; col < BOARD_SIZE; col++) {
 				jButtonsBoard[row][col] = new JButton("");
-				jButtonsBoard[row][col].setPreferredSize(new Dimension(100,100));
+				jButtonsBoard[row][col].setPreferredSize(new Dimension(80,80));
 				jButtonsBoard[row][col].addActionListener(listener);
 				gamePanel.add(jButtonsBoard[row][col]);
 			}
@@ -44,6 +52,10 @@ public class GamePanel extends JPanel{
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(buttonLayout);
 		add(buttonPanel);
+		
+		MenuListener mListener = new MenuListener();
+		quit.addActionListener(mListener);
+		reset.addActionListener(mListener);
 
 		upButton = new JButton("Up");
 		upButton.addActionListener(listener);
@@ -57,6 +69,11 @@ public class GamePanel extends JPanel{
 		buttonPanel.add(downButton);
 		buttonPanel.add(leftButton);
 		buttonPanel.add(rightButton);
+		
+
+		
+		addKeyListener(new MyKeyListener());
+		setFocusable(true);
 	}
 
 	private void displayBoard() {
@@ -76,41 +93,62 @@ public class GamePanel extends JPanel{
 		}
 	}
 	
+	private class MenuListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			if (quit == event.getSource()) {
+				System.exit(0);
+			}
+			if (reset == event.getSource()) {
+				game.reset();
+			}
+		}
+	}
+	
+	//TODO: test for a win somewhere
 	private class ButtonListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// Determine which button was selected.
 			if (upButton == e.getSource()) {
-				
+				game.recurseUp(0);
 			}
 			else if (downButton == e.getSource()) {
-
+				game.recurseDown(0);
 			}
 			else if (leftButton == e.getSource()) {
-
+				game.recurseLeft(0);
 			}
-			else {
-				//right button was selected
+			else if (rightButton == e.getSource()){
+				game.recurseRight(0);
 			}
 
 			displayBoard();
-
-			// Determine if there is a winner by asking the game object. (see step 6)
-			if (game.getStatus().equals(GameStatus.IN_PROGRESS)) {
-				displayBoard();
-			} 
-			else if (game.getStatus().equals(GameStatus.WON)) {
-				JOptionPane.showMessageDialog(null, "You win!\nThe game will reset");
-				game.reset();
-				displayBoard();
-			} 
-			else { //game was lost
-				JOptionPane.showMessageDialog(null, "Game over.\nThe game will reset");
-				game.reset();
-				displayBoard();
-			} 
 		}
+	}
+	
+	private class MyKeyListener implements KeyListener
+	{
+		public void keyPressed(KeyEvent e)
+		{
+		    if (e.getKeyCode() == KeyEvent.VK_UP ) {
+	            game.recurseUp(0);
+		    } 
+		    else if (e.getKeyCode() == KeyEvent.VK_DOWN ) {
+	            game.recurseDown(0);
+		    }
+		    else if (e.getKeyCode() == KeyEvent.VK_LEFT ) {
+		    	game.recurseLeft(0);
+		    } 
+		    else if (e.getKeyCode() == KeyEvent.VK_RIGHT ) {
+	            game.recurseRight(0);
+		    } 
+		    
+		    displayBoard();
+		}
+		public void keyTyped(KeyEvent e) {}
+		public void keyReleased(KeyEvent e) {}
 	}
 }
 
