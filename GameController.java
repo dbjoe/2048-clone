@@ -136,7 +136,7 @@ public class GameController {
 
 		After we check the current cell, we can move down to the next row and do the same.
      */
-    public void realRecurseLeft(int row) {
+    public void recurseLeft(int row) {
     	if (row < b.getBoardSize()) {
     		for (int i = 0; i < b.getBoardSize() - 2; i++) {
     			Tile current = b.getTile(row, i);
@@ -152,10 +152,10 @@ public class GameController {
 //    				current.setValue(next.getValue());//set it to the next tile
     				b.setTile(row, i+1, null);//set the next tile to null
     				if (row != 0) {
-    					realRecurseLeft(row - 1);//recurse
+    					recurseLeft(row - 1);//recurse
     				}
     				else {
-    					realRecurseLeft(row + 1);
+    					recurseLeft(row + 1);
     				}
     			}
     			else if(x != y) {//if both values are not the same
@@ -167,18 +167,18 @@ public class GameController {
 //    				current.setValue(current.getValue() + next.getValue());
     				b.setTile(row, i+1, null);
     				if (row != 0) {
-    					realRecurseLeft(row - 1);
+    					recurseLeft(row - 1);
     				}
     				else {
-    					realRecurseLeft(row + 1);
+    					recurseLeft(row + 1);
     				}
     			}
     		}
-    	realRecurseLeft(row+1);
+    	recurseLeft(row+1);
     	}
     }
     
-    public void realRecurseRight(int row) {
+    public void recurseRight(int row) {
     	if (row < b.getBoardSize()) {
     		for (int i = b.getBoardSize() - 1; i > 0; i--) {
     			Tile current = b.getTile(row, i);
@@ -194,10 +194,10 @@ public class GameController {
     				//current.setValue(next.getValue());//set it to the next tile
     				b.setTile(row, i - 1, null);//set the next tile to null
     				if (row != 0) {
-    					realRecurseRight(row - 1);//recurse
+    					recurseRight(row - 1);//recurse
     				}
     				else {
-    					realRecurseRight(row + 1);
+    					recurseRight(row + 1);
     				}
     			}
     			else if(x != y) {//if both values are not the same
@@ -209,18 +209,18 @@ public class GameController {
     				//				current.setValue(current.getValue() + next.getValue());
     				b.setTile(row, i-1, null);
     				if (row != 0) {
-    					realRecurseRight(row - 1);
+    					recurseRight(row - 1);
     				}
     				else {
-    					realRecurseRight(row + 1);
+    					recurseRight(row + 1);
     				}
     			}
     		}
-    	realRecurseRight(row+1);
+    	recurseRight(row+1);
     	}
     }
    
-    public void realRecurseUp(int col) {
+    public void recurseUp(int col) {
     	if (col < b.getBoardSize()) {
     		for (int i = 0; i < b.getBoardSize() - 1; i++) {
     			Tile current = b.getTile(i, col);
@@ -236,10 +236,10 @@ public class GameController {
 //    				current.setValue(next.getValue());//set it to the next tile
     				b.setTile(i+1, col, null);//set the next tile to null
     				if (col != 0) {
-    					realRecurseUp(col - 1);//recurse
+    					recurseUp(col - 1);//recurse
     				}
     				else {
-    					realRecurseUp(col + 1);
+    					recurseUp(col + 1);
     				}
     			}
     			else if(x != y) {//if both values are not the same
@@ -251,18 +251,18 @@ public class GameController {
 //    				current.setValue(current.getValue() + next.getValue());
     				b.setTile(i+1, col, null);
     				if (col != 0) {
-    					realRecurseUp(col - 1);
+    					recurseUp(col - 1);
     				}
     				else {
-    					realRecurseUp(col + 1);
+    					recurseUp(col + 1);
     				}
     			}
     		}
-    	realRecurseUp(col+1);
+    	recurseUp(col+1);
     	}
     }
     
-    public void realRecurseDown(int col) {
+    public void recurseDown(int col) {
     	if (col < b.getBoardSize()) {
     		for (int i = b.getBoardSize() - 1; i > 0; i--) {
     			Tile current = b.getTile(i, col);
@@ -278,10 +278,10 @@ public class GameController {
 //    				current.setValue(next.getValue());
     				b.setTile(i - 1, col, null);//set the next tile to null
     				if (col != 0) {
-    					realRecurseDown(col - 1);//recurse
+    					recurseDown(col - 1);//recurse
     				}
     				else {
-    					realRecurseDown(col + 1);
+    					recurseDown(col + 1);
     				}
     			}
     			else if(x != y) {//if both values are not the same
@@ -293,14 +293,32 @@ public class GameController {
     				//				current.setValue(current.getValue() + next.getValue());
     				b.setTile(i-1, col, null);
     				if (col != 0) {
-    					realRecurseDown(col - 1);
+    					recurseDown(col - 1);
     				}
     				else {
-    					realRecurseDown(col + 1);
+    					recurseDown(col + 1);
     				}
     			}
     		}
-    		realRecurseDown(col + 1);
+    		recurseDown(col + 1);
+    	}
+    }
+    
+    public void moveVertical(int i) {
+    	if (i == -1) {
+    		recurseUp(0);
+    	}    	
+    	if (i == 1) {
+    		recurseDown(0);
+    	}
+    }
+    
+    public void moveHorizontal(int i) {
+    	if (i == -1) {
+    		recurseLeft(0);
+    	}
+    	if (i == 1) {
+    		recurseRight(0);
     	}
     }
 }

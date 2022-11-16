@@ -112,17 +112,21 @@ public class GamePanel extends JPanel{
 		public void actionPerformed(ActionEvent e) {
 			// Determine which button was selected.
 			if (upButton == e.getSource()) {
-				game.recurseUp(0);
+				game.moveVertical(-1);
 			}
 			else if (downButton == e.getSource()) {
-				game.recurseDown(0);
+				game.moveVertical(1);
 			}
 			else if (leftButton == e.getSource()) {
-				game.recurseLeft(0);
+				game.moveHorizontal(-1);
 			}
 			else if (rightButton == e.getSource()){
-				game.recurseRight(0);
+				game.moveHorizontal(1);
 			}
+			
+			if(game.getB().hasEmpty()){
+                game.newTile();
+            }
 
 			displayBoard();
 		}
@@ -133,18 +137,21 @@ public class GamePanel extends JPanel{
 		public void keyPressed(KeyEvent e)
 		{
 		    if (e.getKeyCode() == KeyEvent.VK_UP ) {
-	            game.recurseUp(0);
+		    	game.moveVertical( -1);
 		    } 
 		    else if (e.getKeyCode() == KeyEvent.VK_DOWN ) {
-	            game.recurseDown(0);
+				game.moveVertical(1);
 		    }
 		    else if (e.getKeyCode() == KeyEvent.VK_LEFT ) {
-		    	game.recurseLeft(0);
+		    	game.moveHorizontal(-1);
 		    } 
 		    else if (e.getKeyCode() == KeyEvent.VK_RIGHT ) {
-	            game.recurseRight(0);
+		    	game.moveHorizontal(1);
 		    } 
 		    
+		    if(game.getB().hasEmpty()){
+                game.newTile();
+            }
 		    displayBoard();
 		}
 		public void keyTyped(KeyEvent e) {}

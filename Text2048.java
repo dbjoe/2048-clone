@@ -14,16 +14,16 @@ public class Text2048 {
             System.out.println("\"" + direction + "\"");
             switch (direction){
                 case "w":
-                    //game.moveVertical( -1);
+                    game.moveVertical(-1);
                     break;
                 case "s":
-                    //game.moveVertical(1);
+                    game.moveVertical(1);
                     break;
                 case "a":
-                   // game.moveHorizontal(-1);
+                    game.moveHorizontal(-1);
                     break;
                 case "d":
-                    //game.moveHorizontal(1);
+                    game.moveHorizontal(1);
                     break;
                 case "q":
                     System.out.println("Thank you for playing!\n\n");
