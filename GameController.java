@@ -62,7 +62,7 @@ public class GameController {
         for (int row = 0; row < b.getBoardSize(); row++){
             for (int col = 0; col < b.getBoardSize(); col++){
                 Tile t = b.getTile(row,col);
-                if (t.getValue() == winningValue){
+                if (t != null && t.getValue() == winningValue){
                     status = GameStatus.WON;
                 }
             }
@@ -74,7 +74,7 @@ public class GameController {
             for (int row = 0; row < b.getBoardSize(); row++){
                 for (int col = 0; col < b.getBoardSize(); col++){
                     Tile t = b.getTile(row,col);
-                    if ((t.getValue() != winningValue) && (!findSimilarNeighbors(row, col))){
+                    if ((t != null && t.getValue() != winningValue) && (!findSimilarNeighbors(row, col))){
                         status = GameStatus.LOST;
                     }
                 }
@@ -311,6 +311,9 @@ public class GameController {
     	if (i == 1) {
     		recurseDown(0);
     	}
+    	
+    	checkWin();
+    	checkLoss();
     }
     
     public void moveHorizontal(int i) {
@@ -320,5 +323,8 @@ public class GameController {
     	if (i == 1) {
     		recurseRight(0);
     	}
+    	
+    	checkWin();
+    	checkLoss();
     }
 }
