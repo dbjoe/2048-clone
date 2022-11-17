@@ -19,6 +19,9 @@ public class GamePanel extends JPanel{
 	private JButton leftButton;
 	private JButton rightButton;
 	
+	private JLabel numGamesLabel;
+	private JLabel numWinsLabel;
+	
 	private JMenuItem quit;
 	private JMenuItem reset;
 
@@ -48,15 +51,11 @@ public class GamePanel extends JPanel{
 				gamePanel.add(jButtonsBoard[row][col]);
 			}
 
-		GridLayout buttonLayout = new GridLayout(2,1);
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(buttonLayout);
-		add(buttonPanel);
+		GridLayout sideLayout = new GridLayout(5,3);
+		JPanel sidePanel = new JPanel();
+		sidePanel.setLayout(sideLayout);
+		add(sidePanel);
 		
-		MenuListener mListener = new MenuListener();
-		quit.addActionListener(mListener);
-		reset.addActionListener(mListener);
-
 		upButton = new JButton("Up");
 		upButton.addActionListener(listener);
 		downButton = new JButton("Down");
@@ -65,12 +64,30 @@ public class GamePanel extends JPanel{
 		leftButton.addActionListener(listener);
 		rightButton = new JButton("right");
 		rightButton.addActionListener(listener);
-		buttonPanel.add(upButton);
-		buttonPanel.add(downButton);
-		buttonPanel.add(leftButton);
-		buttonPanel.add(rightButton);
+		numGamesLabel = new JLabel(String.valueOf(GameController.numGames));
+		numWinsLabel = new JLabel(String.valueOf(GameController.numWins));
+		sidePanel.add(new JLabel(""));
+		sidePanel.add(upButton);
+		sidePanel.add(new JLabel(""));
 		
-
+		sidePanel.add(leftButton);
+		sidePanel.add(new JLabel(""));
+		sidePanel.add(rightButton);
+		
+		sidePanel.add(new JLabel(""));
+		sidePanel.add(downButton);
+		sidePanel.add(new JLabel(""));
+		
+		sidePanel.add(new JLabel("Games played: "));
+		sidePanel.add(numGamesLabel);
+		sidePanel.add(new JLabel(""));
+		
+		sidePanel.add(new JLabel("Games won: "));
+		sidePanel.add(numWinsLabel);
+		
+		MenuListener mListener = new MenuListener();
+		quit.addActionListener(mListener);
+		reset.addActionListener(mListener);
 		
 		addKeyListener(new MyKeyListener());
 		setFocusable(true);
@@ -125,11 +142,9 @@ public class GamePanel extends JPanel{
 			
 			if(game.getStatus() == GameStatus.WON) {
 				JOptionPane.showMessageDialog(null, "You win! Congratulations!");
-				game.reset();
 			}
 			else if(game.getStatus() == GameStatus.LOST) {
 				JOptionPane.showMessageDialog(null, "Better luck next time");
-				game.reset();
 			}
 			else if(game.getB().hasEmpty()){//TODO: have to make sure it doesn't add for a move that changes nothing
                 game.newTile();
@@ -160,11 +175,11 @@ public class GamePanel extends JPanel{
 		    
 			if(game.getStatus() == GameStatus.WON) {
 				JOptionPane.showMessageDialog(null, "You win! Congratulations!");
-				game.reset();
+				
 			}
 			else if(game.getStatus() == GameStatus.LOST) {
 				JOptionPane.showMessageDialog(null, "Better luck next time");
-				game.reset();
+				
 			}
 			else if(game.getB().hasEmpty()){//TODO: have to make sure it doesn't add for a move that changes nothing
                 game.newTile();
