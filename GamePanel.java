@@ -33,7 +33,7 @@ public class GamePanel extends JPanel{
 		game = aGame;
 		quit = quitItem;
 		reset = resetItem;
-		board = game.getB();
+		board = game.getBoard();
 		BOARD_SIZE = board.getBoardSize();
 
 		GridLayout layout = new GridLayout(BOARD_SIZE, BOARD_SIZE);
@@ -146,7 +146,7 @@ public class GamePanel extends JPanel{
 			else if(game.getStatus() == GameStatus.LOST) {
 				JOptionPane.showMessageDialog(null, "Better luck next time");
 			}
-			else if(game.getB().hasEmpty()){//TODO: have to make sure it doesn't add for a move that changes nothing
+			else if(game.getBoard().hasEmpty()){//TODO: have to make sure it doesn't add for a move that changes nothing
                 game.newTile();
             }
 
@@ -181,7 +181,7 @@ public class GamePanel extends JPanel{
 				JOptionPane.showMessageDialog(null, "Better luck next time");
 				
 			}
-			else if(game.getB().hasEmpty()){//TODO: have to make sure it doesn't add for a move that changes nothing
+			else if(game.getBoard().hasEmpty()){//TODO: have to make sure it doesn't add for a move that changes nothing
                 game.newTile();
             }
 

@@ -11,7 +11,7 @@ public class GameController {
     public static int numWins = 0;
 
     GameController(){
-        b = new Board();
+        b = new Board(4);
         winningValue = 2048;
         r = new Random();
         status = GameStatus.IN_PROGRESS;
@@ -19,8 +19,8 @@ public class GameController {
         newTile();
     }
     
-    GameController(int size, double winningValue){
-        b = new Board(size);       
+    GameController(int boardSize, double winningValue){
+        b = new Board(boardSize);
         this.winningValue = winningValue;
         r = new Random();
         status = GameStatus.IN_PROGRESS;
@@ -28,14 +28,32 @@ public class GameController {
         newTile();
     }
     
-    public Board getB() {
+    public Board getBoard() {
         return this.b;
     }
+	public void setBoard(Board board){
+		this.b = board;
+	}
+	public double getWinningValue(){
+		return this.winningValue;
+	}
+	public void setWinningValue(double value){
+		this.winningValue = value;
+	}
 
     public GameStatus getStatus() {
         return this.status;
     }
-    
+    public void setStatus(GameStatus status){
+		this.status = status;
+	}
+	public int getBoardSize(){
+		int b = getBoard().getBoardSize();
+		return b;
+	}
+	public void setBoardSize(int boardSize){
+		getBoard().setBoardSize(boardSize);
+	}
     public void newTile(){
         int ranRow = r.nextInt(b.getBoardSize());
         int ranCol = r.nextInt(b.getBoardSize());

@@ -8,7 +8,7 @@ public class Text2048 {
 
     public void run(){
         while(game.getStatus() == GameStatus.IN_PROGRESS){
-            game.getB().printBoard();
+            game.getBoard().printBoard();
             System.out.println("Move in which direction? (WASD): ");
             String direction = scanner.nextLine();
             System.out.println("\"" + direction + "\"");
@@ -33,7 +33,7 @@ public class Text2048 {
                     System.out.println("That is not a valid command.");
                     continue;
             }
-            if(game.getB().hasEmpty()){
+            if(game.getBoard().hasEmpty()){
                 game.newTile();
             }
         }

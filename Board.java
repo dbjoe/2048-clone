@@ -41,8 +41,11 @@ public class Board {
     public int getBoardSize() {
     	return boardSize;
     }
-    
-//    public int getRow() {
+
+    public void setBoardSize(int boardSize) {
+        this.boardSize = boardSize;
+    }
+    //    public int getRow() {
 //        return this.row;
 //    }
 //
