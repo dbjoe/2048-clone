@@ -156,7 +156,7 @@ public class GamePanel extends JPanel{
 		public void keyPressed(KeyEvent e)
 		{
 		    if (e.getKeyCode() == KeyEvent.VK_UP ) {
-		    	game.moveVertical( -1);
+		    	game.moveVertical(-1);
 		    } 
 		    else if (e.getKeyCode() == KeyEvent.VK_DOWN ) {
 				game.moveVertical(1);

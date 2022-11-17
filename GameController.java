@@ -159,124 +159,125 @@ public class GameController {
 
 		After we check the current cell, we can move down to the next row and do the same.
 	 */
-	public void realRecurseLeft(int row) {
+	public void recurseHorizontal(int row, int direction) {
 		if(row < b.getBoardSize()) {
-			recurseLeft(row, 1);
-			realRecurseLeft(row+1);
+			int col = 1;
+			if (direction == 1) {
+				col = b.getBoardSize()-2;
+			}
+			recurseRow(row, col, direction);
+			recurseHorizontal(row+1, direction);
 		}
 	}
 
-	private void recurseLeft(int row, int col) {
-		if (col < b.getBoardSize()) {
-			int current = b.getValue(row, col);
-			int prev = b.getValue(row, col-1);
+	private void recurseRow(int row, int col, int direction) {
+		int startCol = 1;
+		if (direction == 1) {
+			startCol = b.getBoardSize()-2;
+		}
 
-			//if the current tile is null, or if the current and previous tiles have different values
+		boolean again = false;
+		if (direction == -1) {
+			if (col < b.getBoardSize()) {
+				again = true;
+			}
+		}
+		else {
+			if (col >= 0) {
+				again = true;
+			}
+		}
+
+		if (again) {
+			int current = b.getValue(row, col);
+			int prev = b.getValue(row, col+direction);
+
+			//if the current tile is null, move on to the next tile
 			if (current == -1) {
-				recurseLeft(row, col+1);
+				recurseRow(row, col-direction, direction);
 			}
 			else {
 				//if current tile has the same value as the previous tile, add them
 				if (current == prev) {
 					Tile doubleTile = new Tile(2*current);
-					b.setTile(row, col-1, doubleTile);
+					b.setTile(row, col+direction, doubleTile);
 					b.setTile(row, col, null);
-					recurseLeft(row, 1);
+					recurseRow(row, startCol, direction);
 				}
 
-				//If the tile to the left is null, move our tile there
+				//If the previous tile is null, move our current tile there
 				if (prev == -1) {
-					b.setTile(row, col-1, b.getTile(row, col));
+					b.setTile(row, col+direction, b.getTile(row, col));
 					b.setTile(row, col, null);
 
-					recurseLeft(row, 1);
+					recurseRow(row, startCol, direction);
 				}
 
 				//If the current tile has a different value than previous, move on
 				if (current != prev) {
-					recurseLeft(row, col+1);
+					recurseRow(row, col-direction, direction);
 				}
 			}
 		}
 	}
 
-	public void realRecurseRight(int row) {
-		if(row < b.getBoardSize()) {
-			recurseRight(row, b.getBoardSize()-2);
-			realRecurseRight(row+1);
-		}
-	}
-
-	private void recurseRight(int row, int col) {
-		if (col >= 0) {
-			int current = b.getValue(row, col);
-			int prev = b.getValue(row, col+1);
-
-			//if the current tile is null, or if the current and previous tiles have different values
-			if (current == -1) {
-				recurseRight(row, col-1);
-			}
-			else {
-				//if current tile has the same value as the previous tile, add them
-				if (current == prev) {
-					Tile doubleTile = new Tile(2*current);
-					b.setTile(row, col+1, doubleTile);
-					b.setTile(row, col, null);
-					recurseRight(row, b.getBoardSize()-2);
-				}
-
-				//If the tile to the right is null, move our tile there
-				if (prev == -1) {
-					b.setTile(row, col+1, b.getTile(row, col));
-					b.setTile(row, col, null);
-
-					recurseRight(row, b.getBoardSize()-2);
-				}
-
-				//If the current tile has a different value than previous, move on
-				if (current != prev) {
-					recurseRight(row, col-1);
-				}
-			}
-		}
-	}
-
-	public void realRecurseUp(int col) {
+	public void recurseVertical(int col, int direction) {
 		if(col < b.getBoardSize()) {
-			recurseUp(1, col);
-			realRecurseUp(col+1);
+			int row = 1;
+			if (direction == 1) {
+				row = b.getBoardSize()-2;
+			}
+			recurseCol(row, col, direction);
+			recurseVertical(col+1, direction);
 		}
 	}
 
-	private void recurseUp(int row, int col) {
-		if (row < b.getBoardSize()) {
-			int current = b.getValue(row, col);
-			int prev = b.getValue(row-1, col);
+	private void recurseCol(int row, int col, int direction) {
+		int startRow = 1;
+		if (direction == 1) {
+			startRow = b.getBoardSize()-2;
+		}
 
-			//if the current tile is null, or if the current and previous tiles have different values
+		boolean again = false;
+		if (direction == -1) {//up
+			if (row < b.getBoardSize()) {
+				again = true;
+			}
+		}
+		else {
+			if (row >= 0) {//down
+				again = true;
+			}
+		}
+
+		if (again) {
+			int current = b.getValue(row, col);
+			int prev = b.getValue(row+direction, col);
+
+			//if the current tile is null, move on to the next tile
 			if (current == -1) {
-				recurseUp(row+1, col);
+				recurseCol(row-direction, col, direction);
 			}
 			else {
 				//if current tile has the same value as the previous tile, add them
 				if (current == prev) {
 					Tile doubleTile = new Tile(2*current);
-					b.setTile(row-1, col, doubleTile);
+					b.setTile(row+direction, col, doubleTile);
 					b.setTile(row, col, null);
-					recurseUp(1, col);
+					recurseCol(startRow, col, direction);
 				}
 
-				//If the tile to the left is null, move our tile there
+				//If the previous tile is null, move our current tile there
 				if (prev == -1) {
-					b.setTile(row-1, col, b.getTile(row, col));
+					b.setTile(row+direction, col, b.getTile(row, col));
 					b.setTile(row, col, null);
 
-					recurseUp(1, col);
+					recurseCol(startRow, col, direction);
 				}
 
 				//If the current tile has a different value than previous, move on
 				if (current != prev) {
-					recurseUp(row+1, col);
+					recurseCol(row-direction, col, direction);
 				}
 			}
 		}
@@ -294,7 +295,7 @@ public class GameController {
 			int current = b.getValue(row, col);
 			int prev = b.getValue(row+1, col);
 
-			//if the current tile is null, go to the next tile up
+			//if the current tile is null, move on to the next tile
 			if (current == -1) {
 				recurseDown(row-1, col);
 			}
@@ -324,34 +325,24 @@ public class GameController {
 	}
 
 	public void moveVertical(int i) {
-		if (i == -1) {
-			realRecurseUp(0);
-		}    	
-		if (i == 1) {
-			realRecurseDown(0);
-		}
+		recurseVertical(0,i);
 
 		checkWin();
 		checkLoss();
-		
+
 		if(getBoard().hasEmpty()){//TODO: have to make sure it doesn't add for a move that changes nothing
-	           newTile();
-	        }
+			newTile();
+		}
 	}
 
 	public void moveHorizontal(int i) {
-		if (i == -1) {
-			realRecurseLeft(0);
-		}
-		if (i == 1) {
-			realRecurseRight(0);
-		}
+		recurseHorizontal(0,i);
 
 		checkWin();
 		checkLoss();
-		
+
 		if(getBoard().hasEmpty()){//TODO: have to make sure it doesn't add for a move that changes nothing
-	           newTile();
-	        }
+			newTile();
+		}
 	}
 }
