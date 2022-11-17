@@ -3,16 +3,19 @@ package project3;
 import java.util.Random;
 
 public class GameController {
-    Board b;
-    GameStatus status;
-    double winningValue;
-    Random r;
+    private Board b;
+    private GameStatus status;
+    private double winningValue;
+    private Random r;
+    public static int numGames = 0;
+    public static int numWins = 0;
 
     GameController(){
         b = new Board();
         winningValue = 2048;
         r = new Random();
         status = GameStatus.IN_PROGRESS;
+        numGames++;
         newTile();
     }
     
@@ -21,6 +24,7 @@ public class GameController {
         this.winningValue = winningValue;
         r = new Random();
         status = GameStatus.IN_PROGRESS;
+        numGames++;
         newTile();
     }
     
@@ -64,6 +68,7 @@ public class GameController {
                 Tile t = b.getTile(row,col);
                 if (t != null && t.getValue() == winningValue){
                     status = GameStatus.WON;
+                    numWins++;
                 }
             }
         }

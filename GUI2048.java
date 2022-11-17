@@ -2,8 +2,8 @@ package project3;
 import javax.swing.*;
 import java.awt.*;
 public class GUI2048 {
-
-	public static void main(String[] args) {
+	
+	public void run() {
 		int boardSize = 4;
 		double numToWin = 2048;
 		String boardInput;
@@ -12,15 +12,16 @@ public class GUI2048 {
 		JMenuItem quitItem;
 		JMenuItem resetItem;
 		JMenuBar menus;
-		
+
 		fileMenu = new JMenu("File");
 		quitItem = new JMenuItem ("Quit");
 		resetItem = new JMenuItem("Reset");
-		
+
 		fileMenu.add(quitItem);
 		fileMenu.add(resetItem);
 		menus = new JMenuBar();
 		menus.add(fileMenu);
+		GameController game;
 
 		boolean boardLoopAgain;
 		do {
@@ -59,7 +60,7 @@ public class GUI2048 {
 				numLoopAgain = true;
 				JOptionPane.showMessageDialog(null, "Please enter a valid power of 2 needed to win");
 			}
-			
+
 			Tile t = new Tile();
 			if (!t.power2(numToWin)) {
 				numLoopAgain = true;
@@ -69,7 +70,7 @@ public class GUI2048 {
 		} while (numLoopAgain);
 
 
-		GameController game = new GameController(boardSize, numToWin);
+		game = new GameController(boardSize, numToWin);
 
 		JFrame gui = new JFrame("2048");
 		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -82,5 +83,10 @@ public class GUI2048 {
 		gui.setJMenuBar(menus);
 		gui.pack();
 		gui.setVisible(true);
+	}
+	
+	public static void main(String[] args) {
+		GUI2048 game = new GUI2048();
+		game.run();
 	}
 }
