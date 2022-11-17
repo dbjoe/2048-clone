@@ -121,7 +121,6 @@ public class GamePanel extends JPanel{
 		}
 	}
 	
-	//TODO: test for a win somewhere
 	private class ButtonListener implements ActionListener {
 
 		@Override
@@ -140,17 +139,15 @@ public class GamePanel extends JPanel{
 				game.moveHorizontal(1);
 			}
 			
+			displayBoard();
+			
 			if(game.getStatus() == GameStatus.WON) {
 				JOptionPane.showMessageDialog(null, "You win! Congratulations!");
 			}
 			else if(game.getStatus() == GameStatus.LOST) {
 				JOptionPane.showMessageDialog(null, "Better luck next time");
 			}
-			else if(game.getBoard().hasEmpty()){//TODO: have to make sure it doesn't add for a move that changes nothing
-                game.newTile();
-            }
 
-			displayBoard();
 		}
 	}
 	
@@ -181,11 +178,7 @@ public class GamePanel extends JPanel{
 				JOptionPane.showMessageDialog(null, "Better luck next time");
 				
 			}
-			else if(game.getBoard().hasEmpty()){//TODO: have to make sure it doesn't add for a move that changes nothing
-                game.newTile();
-            }
 
-//		    displayBoard();
 		}
 		public void keyTyped(KeyEvent e) {}
 		public void keyReleased(KeyEvent e) {}

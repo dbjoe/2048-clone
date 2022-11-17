@@ -129,49 +129,49 @@ public class Test2048 {
 
     }
 
-    @Test
-    public void testDefaultGameController(){
-        GameController test = new GameController();
-        String winValTest = "";
-        winValTest = winValTest + test.getWinningValue();
-        assertEquals("2048.0",winValTest);
-        assertEquals(GameStatus.IN_PROGRESS,test.getStatus());
-        assertEquals(4,test.b.getBoardSize());
-    }
-    @Test
-    public void testOverloadedGameController(){
-        try {
-            GameController test1 = new GameController(3, 2048);
-        }
-        catch (IllegalArgumentException e){
-            assertNotNull(e);
-        }
-        try {
-            GameController test1 = new GameController(3, 2047);
-        }
-        catch (IllegalArgumentException e){
-            assertNotNull(e);
-        }
-        try {
-            GameController test1 = new GameController(5, 0);
-        }
-        catch (IllegalArgumentException e){
-            assertNotNull(e);
-        }
-        try {
-            GameController test1 = new GameController(11, 0);
-        }
-        catch (IllegalArgumentException e){
-            assertNotNull(e);
-        }
-
-        GameController test1 = new GameController(5, 1024);
-        String winValTest = "";
-        winValTest = winValTest + test1.getWinningValue();
-        assertEquals("1024.0",winValTest);
-        assertEquals(GameStatus.IN_PROGRESS,test1.getStatus());
-        assertEquals(5,test1.b.getBoardSize());
-    }
+//    @Test
+//    public void testDefaultGameController(){
+//        GameController test = new GameController();
+//        String winValTest = "";
+//        winValTest = winValTest + test.getWinningValue();
+//        assertEquals("2048.0",winValTest);
+//        assertEquals(GameStatus.IN_PROGRESS,test.getStatus());
+//        assertEquals(4,test.b.getBoardSize());
+//    }
+//    @Test
+//    public void testOverloadedGameController(){
+//        try {
+//            GameController test1 = new GameController(3, 2048);
+//        }
+//        catch (IllegalArgumentException e){
+//            assertNotNull(e);
+//        }
+//        try {
+//            GameController test1 = new GameController(3, 2047);
+//        }
+//        catch (IllegalArgumentException e){
+//            assertNotNull(e);
+//        }
+//        try {
+//            GameController test1 = new GameController(5, 0);
+//        }
+//        catch (IllegalArgumentException e){
+//            assertNotNull(e);
+//        }
+//        try {
+//            GameController test1 = new GameController(11, 0);
+//        }
+//        catch (IllegalArgumentException e){
+//            assertNotNull(e);
+//        }
+//
+//        GameController test1 = new GameController(5, 1024);
+//        String winValTest = "";
+//        winValTest = winValTest + test1.getWinningValue();
+//        assertEquals("1024.0",winValTest);
+//        assertEquals(GameStatus.IN_PROGRESS,test1.getStatus());
+//        assertEquals(5,test1.b.getBoardSize());
+//    }
     @Test
     public void testGetBoard(){
         GameController test = new GameController();
