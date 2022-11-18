@@ -2,61 +2,130 @@ package project3;
 
 import java.util.Random;
 
+/**
+ * A class that controls the 2048 game logic.
+ * @author Gabe Kucinich, Zay Price, Joe Zylla
+ * @version 11/21/2022
+ */
 public class GameController {
+	/**
+	 * The board - a LinkList of LinkLists containing Tiles
+	 */
 	private Board b;
+	/**
+	 * The status of the game - WON, LOST, or IN_PROGRESS
+	 */
 	private GameStatus status;
+	/**
+	 * The power of 2 needed to win the game
+	 */
 	private double winningValue;
+	/**
+	 * A random variable used to generate new Tiles
+	 */
 	private Random r;
+	/**
+	 * The number of games finished
+	 */
 	public static int numGames = 0;
+	/**
+	 * The number of games won
+	 */
 	public static int numWins = 0;
-
+	
+	/******************************************************************
+	 * Default constructor. Creates a 4x4 board with a value of
+	 * 2048 needed to win.
+	 *****************************************************************/
 	GameController(){
 		b = new Board(4);
 		winningValue = 2048;
 		r = new Random();
 		status = GameStatus.IN_PROGRESS;
-		numGames++;
 		newTile();
 	}
-
+	
+	/******************************************************************
+	 * Parameterized constructor.
+	 * @param boardSize the length and width of the square board
+	 * @param winningValue the power of 2 needed to win the game
+	 *****************************************************************/
 	GameController(int boardSize, double winningValue){
 		b = new Board(boardSize);
 		this.winningValue = winningValue;
 		r = new Random();
 		status = GameStatus.IN_PROGRESS;
-		numGames++;
 		newTile();
 	}
-
+	
+	/******************************************************************
+	 * Gets the Board instance variable
+	 * @return b, the Board instance variable
+	 *****************************************************************/
 	public Board getBoard() {
 		return this.b;
 	}
+	
+	/******************************************************************
+	 * Sets the Board instance variable b
+	 *****************************************************************/
 	public void setBoard(Board board){
 		this.b = board;
 	}
+	
+	/******************************************************************
+	 * Gets the power of 2 needed to win
+	 * @return the power of 2 needed to win 
+	 *****************************************************************/
 	public double getWinningValue(){
 		return this.winningValue;
 	}
+	
+	/******************************************************************
+	 * Sets the power of 2 needed to win
+	 *****************************************************************/
 	public void setWinningValue(double value){
 		this.winningValue = value;
 	}
 
+	/******************************************************************
+	 * Gets the status of the game - WON, LOST, or IN_PROGRESS
+	 *****************************************************************/
 	public GameStatus getStatus() {
 		return this.status;
 	}
+	
+	/******************************************************************
+	 * Sets the status of the game - WON, LOST, or IN_PROGRESS
+	 *****************************************************************/
 	public void setStatus(GameStatus status){
 		this.status = status;
 	}
+	
+	/******************************************************************
+	 * Gets the size of the board
+	 * @return the size of the board
+	 *****************************************************************/
 	public int getBoardSize(){
 		int b = getBoard().getBoardSize();
 		return b;
 	}
+	
+	/******************************************************************
+	 * Sets the board size
+	 * @param boardSize the size of the board
+	 *****************************************************************/
 	public void setBoardSize(int boardSize){
 		getBoard().setBoardSize(boardSize);
 	}
+	
+	/******************************************************************
+	 * Creates a new tile with a value of either 2 or 4 and places it
+	 * at a random spot on the board
+	 *****************************************************************/
 	public void newTile(){
-		int ranRow = r.nextInt(b.getBoardSize());
-		int ranCol = r.nextInt(b.getBoardSize());
+		int ranRow;
+		int ranCol;
 		int ranValue = r.nextInt(2);
 		Tile t;
 
@@ -66,13 +135,18 @@ public class GameController {
 		else{
 			t = new Tile(4);
 		}
-		while (b.getValue(ranRow,ranCol) != -1){
+		
+		do {
 			ranRow = r.nextInt(b.getBoardSize());
 			ranCol = r.nextInt(b.getBoardSize());
-		}
+		} while (b.getValue(ranRow,ranCol) != -1);
+
 		b.setTile(ranRow, ranCol, t);
 	}
 
+	/******************************************************************
+	 * Resets the board to its starting state
+	 *****************************************************************/
 	public void reset(){
 		b = new Board(b.getBoardSize());
 		r = new Random();
@@ -80,6 +154,9 @@ public class GameController {
 		newTile();
 	}
 
+	/******************************************************************
+	 * Checks for a winning value in each tile of the board
+	 *****************************************************************/
 	private void checkWin(){
 		for (int row = 0; row < b.getBoardSize(); row++){
 			for (int col = 0; col < b.getBoardSize(); col++){
@@ -92,12 +169,17 @@ public class GameController {
 		}
 	}
 
+	/******************************************************************
+	 * Checks for a loss by determining if the board is full and there
+	 * are no more moves
+	 *****************************************************************/
 	private void checkLoss(){
 		if (!b.hasEmpty()) {
 			for (int row = 0; row < b.getBoardSize(); row++){
 				for (int col = 0; col < b.getBoardSize(); col++){
 					Tile t = b.getTile(row,col);
-					if ((t != null && t.getValue() != winningValue) && (!findSimilarNeighbors(row, col))){
+					if ((t != null && t.getValue() != winningValue)
+							&& (!findSimilarNeighbors(row, col))){
 						status = GameStatus.LOST;
 					}
 				}
@@ -105,6 +187,14 @@ public class GameController {
 		}
 	}
 
+	/******************************************************************
+	 * Checks tiles above, below, to the left, and to the right of a 
+	 * tile to see if they can be combined
+	 * @param row the row of the tile we're checking around
+	 * @param col the column of the tile we're checking around
+	 * @return true if the tile at (row,col) can be combined with a
+	 * 			neighboring tile, false otherwise
+	 *****************************************************************/
 	private boolean findSimilarNeighbors(int row, int col){
 		boolean neighbors = false;
 		int givenValue = b.getValue(row, col);
@@ -145,20 +235,16 @@ public class GameController {
 		return neighbors;
 	}
 
-	/*
-	 * Let's consider the case of moving all the Tiles to the left.  
-	 * We know that the furthest left column can't move so we can ignore it.  
-	 * We start then at the second column and begin checking the cell at the first row.  
-	 * There are only a few things that can happen.
-		-	That location is null.  In that case, there is nothing to do!
-		-	The next location we are trying to move to is null.  In that case, we just move our 
-			Tile to that location.
-		-	The next location we are trying to move to has the same value as us. Combine our values into 
-			the Tile at the location to which we wish to move and remove the current one.
-		-	The Tile we wish to move to is not the same value as us.  There is nothing to do.
 
-		After we check the current cell, we can move down to the next row and do the same.
-	 */
+	/******************************************************************
+	 * Calls recurseRow to add/move tiles horizontally for each row of
+	 * the board. Passes in the second from the left column as a 
+	 * starting point if we are recursing left, and second from the 
+	 * right column if we are recursing right.
+	 * @param row the row we are currently recursing across
+	 * @param direction a value of -1 to recurse left and a value of 1
+	 * 		  to recurse right
+	 *****************************************************************/
 	public void recurseHorizontal(int row, int direction) {
 		if(row < b.getBoardSize()) {
 			int col = 1;
@@ -170,19 +256,34 @@ public class GameController {
 		}
 	}
 
+	/******************************************************************
+	 * Recurses across a single row to add/move tiles to the left or
+	 * right.
+	 * @param row the current row of the Tile we are checking
+	 * @param col the current column of the Tile we are checking
+	 * @param direction a value of -1 to indicate recursing left or a
+	 * 		  value of 1 to indicated recursing right
+	 *****************************************************************/
 	private void recurseRow(int row, int col, int direction) {
 		int startCol = 1;
+		//if we are moving tiles to the right, our starting tile will 
+		//be in the second from the right column
 		if (direction == 1) {
 			startCol = b.getBoardSize()-2;
 		}
-
+		
+		
 		boolean again = false;
+		//If we're recursing left, we stop recursing when 
+		//col is equal to boardSize
 		if (direction == -1) {
 			if (col < b.getBoardSize()) {
 				again = true;
 			}
 		}
 		else {
+			//If we're recursing right, we stop recursing when 
+			//col less than 0
 			if (col >= 0) {
 				again = true;
 			}
@@ -197,7 +298,8 @@ public class GameController {
 				recurseRow(row, col-direction, direction);
 			}
 			else {
-				//if current tile has the same value as the previous tile, add them
+				//if current tile has the same value as the previous
+				//tile, add them
 				if (current == prev) {
 					Tile doubleTile = new Tile(2*current);
 					b.setTile(row, col+direction, doubleTile);
@@ -205,7 +307,8 @@ public class GameController {
 					recurseRow(row, startCol, direction);
 				}
 
-				//If the previous tile is null, move our current tile there
+				//If the previous tile is null, move our current tile
+				//to that location
 				if (prev == -1) {
 					b.setTile(row, col+direction, b.getTile(row, col));
 					b.setTile(row, col, null);
@@ -213,7 +316,8 @@ public class GameController {
 					recurseRow(row, startCol, direction);
 				}
 
-				//If the current tile has a different value than previous, move on
+				//If the current tile has a different value than the
+				//previous tile, move on to the next tile
 				if (current != prev) {
 					recurseRow(row, col-direction, direction);
 				}
@@ -221,6 +325,15 @@ public class GameController {
 		}
 	}
 
+	/******************************************************************
+	 * Calls recurseCol to add/move tiles vertically for each column of
+	 * the board. Passes in the second from the top row as a 
+	 * starting point if we are recursing up, and second from the 
+	 * bottom row if we are recursing down.
+	 * @param col the column we are currently recursing up/down
+	 * @param direction a value of -1 to recurse up and a value of 1
+	 * 		  to recurse down
+	 *****************************************************************/
 	public void recurseVertical(int col, int direction) {
 		if(col < b.getBoardSize()) {
 			int row = 1;
@@ -232,6 +345,13 @@ public class GameController {
 		}
 	}
 
+	/******************************************************************
+	 * Recurses up/down a single column to add/move tiles up or down.
+	 * @param row the current row of the Tile we are checking
+	 * @param col the current column of the Tile we are checking
+	 * @param direction a value of -1 to indicate recursing up or a
+	 * 		  value of 1 to indicated recursing down
+	 *****************************************************************/
 	private void recurseCol(int row, int col, int direction) {
 		int startRow = 1;
 		if (direction == 1) {
@@ -259,7 +379,8 @@ public class GameController {
 				recurseCol(row-direction, col, direction);
 			}
 			else {
-				//if current tile has the same value as the previous tile, add them
+				//if current tile has the same value as the previous
+				//tile, add them
 				if (current == prev) {
 					Tile doubleTile = new Tile(2*current);
 					b.setTile(row+direction, col, doubleTile);
@@ -267,7 +388,8 @@ public class GameController {
 					recurseCol(startRow, col, direction);
 				}
 
-				//If the previous tile is null, move our current tile there
+				//If the previous tile is null, move our current tile
+				//to that location
 				if (prev == -1) {
 					b.setTile(row+direction, col, b.getTile(row, col));
 					b.setTile(row, col, null);
@@ -275,7 +397,8 @@ public class GameController {
 					recurseCol(startRow, col, direction);
 				}
 
-				//If the current tile has a different value than previous, move on
+				//If the current tile has a different value than 
+				//the previous tile, move on
 				if (current != prev) {
 					recurseCol(row-direction, col, direction);
 				}
@@ -283,47 +406,12 @@ public class GameController {
 		}
 	}
 
-	public void realRecurseDown(int col) {
-		if(col < b.getBoardSize()) {
-			recurseDown(b.getBoardSize()-2, col);
-			realRecurseDown(col+1);
-		}
-	}
-
-	private void recurseDown(int row, int col) {
-		if (row >= 0) {
-			int current = b.getValue(row, col);
-			int prev = b.getValue(row+1, col);
-
-			//if the current tile is null, move on to the next tile
-			if (current == -1) {
-				recurseDown(row-1, col);
-			}
-			else {
-				//if current tile has the same value as the previous tile, add them
-				if (current == prev) {
-					Tile doubleTile = new Tile(2*current);
-					b.setTile(row+1, col, doubleTile);
-					b.setTile(row, col, null);
-					recurseDown(b.getBoardSize()-2, col);
-				}
-
-				//If the tile below is null, move our tile there
-				if (prev == -1) {
-					b.setTile(row+1, col, b.getTile(row, col));
-					b.setTile(row, col, null);
-
-					recurseDown(b.getBoardSize()-2, col);
-				}
-
-				//If the current tile has a different value than the tile below, move on
-				if (current != prev) {
-					recurseDown(row-1, col);
-				}
-			}
-		}
-	}
-
+	/******************************************************************
+	 * Calls recurseVertical with the appropriate starting column
+	 * and direction. Then calls checkWin, checkLoss, and if a move was
+	 * made, calls newTile.
+	 * @param i the direction we are moving (-1 for up, 1 for down)
+	 *****************************************************************/
 	public void moveVertical(int i) {
 		recurseVertical(0,i);
 
@@ -335,6 +423,12 @@ public class GameController {
 		}
 	}
 
+	/******************************************************************
+	 * Calls recurseHorizontal with the appropriate starting row
+	 * and direction. Then calls checkWin, checkLoss, and if a move was
+	 * made, calls newTile.
+	 * @param i the direction we are moving (-1 for left, 1 for right)
+	 *****************************************************************/
 	public void moveHorizontal(int i) {
 		recurseHorizontal(0,i);
 
