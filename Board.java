@@ -85,7 +85,7 @@ public class Board {
             throw new IllegalArgumentException();
         }
         else {
-        	b.getNodeAt(row).getData().getNodeAt(col).setData(t);//TODO: does this break if it's null?
+        	b.getNodeAt(row).getData().getNodeAt(col).setData(t);
         }
     }
     

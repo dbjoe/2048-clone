@@ -26,7 +26,7 @@ public class Tile {
     }
     
     public boolean power2(double value){
-        if (Math.abs(value - 2.0) < 0.0000001 ){
+        if (Math.abs(value - 2.0) < 0.0000001 ){//TODO: add more precision?
             return true;
         }
         else if (value < 2.0) {
@@ -38,7 +38,7 @@ public class Tile {
     }
     
     @Override
-    public String toString(){
+    public String toString(){//TODO: remove dead code?
     	if(this == null) {
     		return " ";
     	}

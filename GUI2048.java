@@ -2,12 +2,13 @@ package project3;
 import javax.swing.*;
 import java.awt.*;
 public class GUI2048 {
+	private JFrame frame;
 	
-	public void run() {
-		int boardSize = 4;
-		double numToWin = 2048;
-		String boardInput;
-		String numInput;
+	public JFrame getFrame() {
+		return frame;
+	}
+	
+	GUI2048(GameController game) {
 		JMenu fileMenu;
 		JMenuItem quitItem;
 		JMenuItem resetItem;
@@ -21,72 +22,24 @@ public class GUI2048 {
 		fileMenu.add(resetItem);
 		menus = new JMenuBar();
 		menus.add(fileMenu);
-		GameController game;
-
-		boolean boardLoopAgain;
-		do {
-			// set loop condition to false to prevent infinite loop
-			boardLoopAgain = false;
-			boardInput = JOptionPane.showInputDialog(null, "Enter a board size between 4 and 10:");
-
-			if (boardInput == null)
-				System.exit(0);
-
-			try {
-				boardSize = Integer.parseInt(boardInput);
-			} catch (NumberFormatException e) {
-				boardLoopAgain = true;
-				JOptionPane.showMessageDialog(null, "Please enter an integer between 4 and 10");
-			}
-
-			if (boardSize < 4 || boardSize > 10) {
-				boardLoopAgain = true;
-				JOptionPane.showMessageDialog(null, "Please enter an integer between 4 and 10");
-			}
-
-		} while (boardLoopAgain);
-
-		boolean numLoopAgain;
-		do {
-			numLoopAgain = false;
-			numInput = JOptionPane.showInputDialog(null, "Enter a power of 2 needed to win:");
-
-			if (numInput == null)
-				System.exit(0);
-
-			try {
-				numToWin = Double.parseDouble(numInput);
-			} catch (NumberFormatException e) {
-				numLoopAgain = true;
-				JOptionPane.showMessageDialog(null, "Please enter a valid power of 2 needed to win");
-			}
-
-			Tile t = new Tile();
-			if (!t.power2(numToWin)) {
-				numLoopAgain = true;
-				JOptionPane.showMessageDialog(null, "Please enter a valid power of 2 needed to win");
-			}
-
-		} while (numLoopAgain);
-
-
-		game = new GameController(boardSize, numToWin);
-
-		JFrame gui = new JFrame("2048");
-		gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		GamePanel panel = new GamePanel(game, quitItem, resetItem);
-		gui.getContentPane().add(panel);
-
-		gui.setSize(1100, 700);
-		gui.setPreferredSize(new Dimension(1100, 700));
-		gui.setJMenuBar(menus);
-		gui.pack();
-		gui.setVisible(true);
+		frame = new JFrame("2048");
+		
+		frame.getContentPane().add(panel);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(1000, 700);
+		frame.setPreferredSize(new Dimension(1000, 700));
+		frame.setJMenuBar(menus);
+		frame.pack();
+		frame.setVisible(true);
 	}
 	
 	public static void main(String[] args) {
-		GUI2048 game = new GUI2048();
-		game.run();
+		Starter s = new Starter();
+		int boardSize = s.startBoard();
+		double numToWin = s.startNumToWin();
+		GameController game = new GameController(boardSize, numToWin);
+		GUI2048 gui = new GUI2048(game);
 	}
 }

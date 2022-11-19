@@ -24,7 +24,9 @@ public class GamePanel extends JPanel{
 	
 	private JMenuItem quit;
 	private JMenuItem reset;
-
+	
+	private JPanel gamePanel;
+	private JPanel sidePanel;
 
 	private int BOARD_SIZE;
 
@@ -33,39 +35,55 @@ public class GamePanel extends JPanel{
 		game = aGame;
 		quit = quitItem;
 		reset = resetItem;
+		
+		MenuListener mListener = new MenuListener();
+		quit.addActionListener(mListener);
+		reset.addActionListener(mListener);
+		
+		setUpBoard(game);
+		displayBoard();
+	}
+	
+	private void setUpBoard(GameController game) {
 		board = game.getBoard();
 		BOARD_SIZE = board.getBoardSize();
 
 		GridLayout layout = new GridLayout(BOARD_SIZE, BOARD_SIZE);
-		JPanel gamePanel = new JPanel();
+		
+		gamePanel = new JPanel();
 		gamePanel.setLayout(layout);
 		add(gamePanel);
 
 		jButtonsBoard = new JButton[BOARD_SIZE][BOARD_SIZE];
-		ButtonListener listener = new ButtonListener();
+		int buttonSize = 600/BOARD_SIZE;
+		
 		for (int row = 0; row < BOARD_SIZE; row++)
 			for (int col = 0; col < BOARD_SIZE; col++) {
 				jButtonsBoard[row][col] = new JButton("");
-				jButtonsBoard[row][col].setPreferredSize(new Dimension(80,80));
-				jButtonsBoard[row][col].addActionListener(listener);
+				jButtonsBoard[row][col].setPreferredSize(new Dimension(buttonSize,buttonSize));
+
 				gamePanel.add(jButtonsBoard[row][col]);
 			}
-
+		
+		ButtonListener listener = new ButtonListener();
 		GridLayout sideLayout = new GridLayout(5,3);
-		JPanel sidePanel = new JPanel();
+		sidePanel = new JPanel();
 		sidePanel.setLayout(sideLayout);
 		add(sidePanel);
 		
 		upButton = new JButton("Up");
 		upButton.addActionListener(listener);
+		upButton.setFocusable(false);
 		downButton = new JButton("Down");
 		downButton.addActionListener(listener);
+		downButton.setFocusable(false);
 		leftButton = new JButton("left");
 		leftButton.addActionListener(listener);
+		leftButton.setFocusable(false);
 		rightButton = new JButton("right");
 		rightButton.addActionListener(listener);
-		numGamesLabel = new JLabel(String.valueOf(GameController.numGames));
-		numWinsLabel = new JLabel(String.valueOf(GameController.numWins));
+		rightButton.setFocusable(false);
+		
 		sidePanel.add(new JLabel(""));
 		sidePanel.add(upButton);
 		sidePanel.add(new JLabel(""));
@@ -78,6 +96,9 @@ public class GamePanel extends JPanel{
 		sidePanel.add(downButton);
 		sidePanel.add(new JLabel(""));
 		
+		numGamesLabel = new JLabel(String.valueOf(GameController.numGames));
+		numWinsLabel = new JLabel(String.valueOf(GameController.numWins));
+		
 		sidePanel.add(new JLabel("Games played: "));
 		sidePanel.add(numGamesLabel);
 		sidePanel.add(new JLabel(""));
@@ -85,12 +106,27 @@ public class GamePanel extends JPanel{
 		sidePanel.add(new JLabel("Games won: "));
 		sidePanel.add(numWinsLabel);
 		
-		MenuListener mListener = new MenuListener();
-		quit.addActionListener(mListener);
-		reset.addActionListener(mListener);
-		
 		addKeyListener(new MyKeyListener());
-		setFocusable(true);
+		setFocusable(true); 
+	}
+	
+	private void reset() {
+		GameController.numGames++;
+		removeAll();
+		
+		Starter s = new Starter();
+		int size = s.startBoard();
+		double num = s.startNumToWin();
+		
+		Board b = new Board(size);
+		game.setBoard(b);
+		game.setWinningValue(num);
+		game.setStatus(GameStatus.IN_PROGRESS);
+		setUpBoard(game);
+		
+		revalidate();
+		repaint();
+		displayBoard();
 	}
 
 	private void displayBoard() {
@@ -116,7 +152,7 @@ public class GamePanel extends JPanel{
 				System.exit(0);
 			}
 			if (reset == event.getSource()) {
-				game.reset();
+				reset();
 			}
 		}
 	}
@@ -143,11 +179,12 @@ public class GamePanel extends JPanel{
 			
 			if(game.getStatus() == GameStatus.WON) {
 				JOptionPane.showMessageDialog(null, "You win! Congratulations!");
+				reset();
 			}
 			else if(game.getStatus() == GameStatus.LOST) {
 				JOptionPane.showMessageDialog(null, "Better luck next time");
+				reset();
 			}
-
 		}
 	}
 	
@@ -172,11 +209,11 @@ public class GamePanel extends JPanel{
 		    
 			if(game.getStatus() == GameStatus.WON) {
 				JOptionPane.showMessageDialog(null, "You win! Congratulations!");
-				
+				reset();
 			}
 			else if(game.getStatus() == GameStatus.LOST) {
 				JOptionPane.showMessageDialog(null, "Better luck next time");
-				
+				reset();
 			}
 
 		}

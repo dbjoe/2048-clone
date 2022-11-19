@@ -2,6 +2,10 @@ package project3;
 
 import java.util.Random;
 
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+
 /**
  * A class that controls the 2048 game logic.
  * @author Gabe Kucinich, Zay Price, Joe Zylla
@@ -38,7 +42,7 @@ public class GameController {
 	 * 2048 needed to win.
 	 *****************************************************************/
 	GameController(){
-		b = new Board(4);
+		b = new Board();
 		winningValue = 2048;
 		r = new Random();
 		status = GameStatus.IN_PROGRESS;
@@ -52,7 +56,7 @@ public class GameController {
 	 *****************************************************************/
 	GameController(int boardSize, double winningValue){
 		b = new Board(boardSize);
-		this.winningValue = winningValue;
+		setWinningValue(winningValue);
 		r = new Random();
 		status = GameStatus.IN_PROGRESS;
 		newTile();
@@ -68,8 +72,12 @@ public class GameController {
 	
 	/******************************************************************
 	 * Sets the Board instance variable b
+	 * @throws IllegalArgumentException if parameter is null
 	 *****************************************************************/
 	public void setBoard(Board board){
+		if (board == null) {
+			throw new IllegalArgumentException();
+		}
 		this.b = board;
 	}
 	
@@ -83,8 +91,14 @@ public class GameController {
 	
 	/******************************************************************
 	 * Sets the power of 2 needed to win
+	 * @param value the value needed to win the game
+	 * @throws IllegalArgumentException if value is invalid
 	 *****************************************************************/
 	public void setWinningValue(double value){
+		Tile t = new Tile();
+		if(!t.power2(value)) {
+			throw new IllegalArgumentException();
+		}
 		this.winningValue = value;
 	}
 
@@ -97,8 +111,13 @@ public class GameController {
 	
 	/******************************************************************
 	 * Sets the status of the game - WON, LOST, or IN_PROGRESS
+	 * @param status can be WON, LOST, or IN_PROGRESS
+	 * @throws IllegalArgumentException if the parameter is null
 	 *****************************************************************/
 	public void setStatus(GameStatus status){
+		if (status == null) {
+			throw new IllegalArgumentException();
+		}
 		this.status = status;
 	}
 	
@@ -114,8 +133,12 @@ public class GameController {
 	/******************************************************************
 	 * Sets the board size
 	 * @param boardSize the size of the board
+	 * @throws IllegalArgumentException if boardSize <4 or >10
 	 *****************************************************************/
 	public void setBoardSize(int boardSize){
+		if (boardSize < 4 || boardSize > 10) {
+			throw new IllegalArgumentException();
+		}
 		getBoard().setBoardSize(boardSize);
 	}
 	
@@ -145,23 +168,13 @@ public class GameController {
 	}
 
 	/******************************************************************
-	 * Resets the board to its starting state
-	 *****************************************************************/
-	public void reset(){
-		b = new Board(b.getBoardSize());
-		r = new Random();
-		status = GameStatus.IN_PROGRESS;
-		newTile();
-	}
-
-	/******************************************************************
 	 * Checks for a winning value in each tile of the board
 	 *****************************************************************/
 	private void checkWin(){
 		for (int row = 0; row < b.getBoardSize(); row++){
 			for (int col = 0; col < b.getBoardSize(); col++){
 				Tile t = b.getTile(row,col);
-				if (t != null && t.getValue() == winningValue){
+				if (t != null && t.getValue() >= winningValue){
 					status = GameStatus.WON;
 					numWins++;
 				}
@@ -174,15 +187,18 @@ public class GameController {
 	 * are no more moves
 	 *****************************************************************/
 	private void checkLoss(){
-		if (!b.hasEmpty()) {
+		boolean noNeighbor = true;
+		if (!b.hasEmpty() && getStatus() != GameStatus.WON) {
 			for (int row = 0; row < b.getBoardSize(); row++){
 				for (int col = 0; col < b.getBoardSize(); col++){
-					Tile t = b.getTile(row,col);
-					if ((t != null && t.getValue() != winningValue)
-							&& (!findSimilarNeighbors(row, col))){
-						status = GameStatus.LOST;
+					if (findSimilarNeighbors(row, col)){
+						noNeighbor = false;
 					}
 				}
+			}
+			
+			if (noNeighbor) {
+				status = GameStatus.LOST;
 			}
 		}
 	}
@@ -416,11 +432,10 @@ public class GameController {
 		recurseVertical(0,i);
 
 		checkWin();
-		checkLoss();
-
 		if(getBoard().hasEmpty()){//TODO: have to make sure it doesn't add for a move that changes nothing
 			newTile();
 		}
+		checkLoss();
 	}
 
 	/******************************************************************
@@ -433,10 +448,9 @@ public class GameController {
 		recurseHorizontal(0,i);
 
 		checkWin();
-		checkLoss();
-
 		if(getBoard().hasEmpty()){//TODO: have to make sure it doesn't add for a move that changes nothing
 			newTile();
 		}
+		checkLoss();
 	}
 }
