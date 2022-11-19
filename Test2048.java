@@ -5,6 +5,365 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class Test2048 {
+	@Test
+	public void testDefaultConstructor() {
+		GameController g = new GameController();
+		assertEquals(4, g.getBoard().getBoardSize());
+		assertEquals(2048, (int)g.getWinningValue());
+	}
+	
+	@Test
+	public void testSetBoard1() {
+		GameController g = new GameController(5, 1024);
+		assertEquals(5, g.getBoard().getBoardSize());
+		Board b = new Board(6);
+		g.setBoard(b);
+		assertEquals(6, g.getBoard().getBoardSize());
+	}
+	
+	@Test
+	(expected = IllegalArgumentException.class)
+	public void testSetBoard2() {
+		GameController g = new GameController();
+		g.setBoard(null);
+	}
+	
+	@Test
+	(expected = IllegalArgumentException.class)
+	public void testSetStatus1() {
+		GameController g = new GameController();
+		g.setStatus(null);
+	}
+	
+	@Test
+	public void testSetStatus2() {
+		GameController g = new GameController();
+		g.setStatus(GameStatus.WON);
+		assertEquals(GameStatus.WON, g.getStatus());
+	} 
+	
+	@Test
+	(expected = IllegalArgumentException.class)
+	public void testSetWinningValue1() {
+		GameController g = new GameController();
+		g.setWinningValue(16.0001);
+	}
+	@Test
+	(expected = IllegalArgumentException.class)
+	public void testSetWinningValue2() {
+		GameController g = new GameController();
+		g.setWinningValue(63.9999);
+	}
+	
+	@Test
+	public void testSetWinningValue3() {
+		GameController g = new GameController();
+		g.setWinningValue(64);
+		assertEquals(64, (int)g.getWinningValue());
+	}
+	
+	@Test
+	public void testSetBoardSize1() {
+		GameController g = new GameController();
+		g.setBoardSize(5);
+		assertEquals(5, g.getBoardSize());
+	}
+	
+	@Test
+	(expected = IllegalArgumentException.class)
+	public void testSetBoardSize2() {
+		GameController g = new GameController();
+		g.setBoardSize(11);
+	}
+	
+	@Test
+	(expected = IllegalArgumentException.class)
+	public void testSetBoardSize3() {
+		GameController g = new GameController();
+		g.setBoardSize(3);
+	}
+	
+	@Test
+	public void testCheckWin1() {
+		GameController g = new GameController();
+		Tile winner = new Tile(2048);
+		g.getBoard().setTile(0, 0, winner);
+		g.moveHorizontal(1); //checkWin() called from here
+		assertEquals(GameStatus.WON, g.getStatus());
+	}
+	
+	@Test
+	public void testCheckWin2() {
+		GameController g = new GameController();
+		Tile winner = new Tile(4096);
+		g.getBoard().setTile(0, 0, winner);
+		g.moveHorizontal(1); //checkWin() called from here
+		assertEquals(GameStatus.WON, g.getStatus());
+	}
+	
+	//Fills the board and leaves no possible moves, resulting in a loss
+	@Test
+	public void testCheckLoss1() {
+		GameController g = new GameController();
+		Tile t1 = new Tile(8);
+		Tile t2 = new Tile(16);
+		Tile t3 = new Tile(32);
+		Tile t4 = new Tile(64);
+		
+		g.getBoard().setTile(0, 0, t1);
+		g.getBoard().setTile(0, 1, t2);
+		g.getBoard().setTile(0, 2, t3);
+		g.getBoard().setTile(0, 3, t4);
+		g.getBoard().setTile(1, 0, t4);
+		g.getBoard().setTile(1, 1, t3);
+		g.getBoard().setTile(1, 2, t2);
+		g.getBoard().setTile(1, 3, t1);
+		g.getBoard().setTile(2, 0, t1);
+		g.getBoard().setTile(2, 1, t2);
+		g.getBoard().setTile(2, 2, t3);
+		g.getBoard().setTile(2, 3, t4);
+		g.getBoard().setTile(3, 0, t1);
+		g.getBoard().setTile(3, 1, t2);
+		g.getBoard().setTile(3, 2, t3);
+		
+		g.moveHorizontal(1); //move right
+		assertFalse(g.getBoard().hasEmpty());
+		assertEquals(GameStatus.LOST, g.getStatus());
+	}
+	
+	//Fills the board and leaves no possible moves, but one tile has the winning value
+	@Test
+	public void testCheckLoss2() {
+		GameController g = new GameController();
+		Tile t1 = new Tile(8);
+		Tile t2 = new Tile(16);
+		Tile t3 = new Tile(32);
+		Tile t4 = new Tile(64);
+		Tile win = new Tile(2048);
+		
+		g.getBoard().setTile(0, 0, t1);
+		g.getBoard().setTile(0, 1, t2);
+		g.getBoard().setTile(0, 2, t3);
+		g.getBoard().setTile(0, 3, t4);
+		g.getBoard().setTile(1, 0, t4);
+		g.getBoard().setTile(1, 1, t3);
+		g.getBoard().setTile(1, 2, t2);
+		g.getBoard().setTile(1, 3, t1);
+		g.getBoard().setTile(2, 0, t1);
+		g.getBoard().setTile(2, 1, t2);
+		g.getBoard().setTile(2, 2, t3);
+		g.getBoard().setTile(2, 3, t4);
+		g.getBoard().setTile(3, 0, t1);
+		g.getBoard().setTile(3, 1, t2);
+		g.getBoard().setTile(3, 2, win);
+		
+		g.moveHorizontal(1); //move right
+		assertFalse(g.getBoard().hasEmpty());
+		assertEquals(GameStatus.WON, g.getStatus());
+	}
+	
+	//Fills up the board, but leaves a move available
+	@Test
+	public void testCheckLoss3() {
+		GameController g = new GameController();
+		Tile t1 = new Tile(8);
+		Tile t2 = new Tile(16);
+		Tile t3 = new Tile(32);
+		Tile t4 = new Tile(64);
+		Tile two = new Tile(2);
+		Tile four = new Tile(4);
+		
+		g.getBoard().setTile(0, 0, t1);
+		g.getBoard().setTile(0, 1, t2);
+		g.getBoard().setTile(0, 2, t3);
+		g.getBoard().setTile(0, 3, t4);
+		g.getBoard().setTile(1, 0, t4);
+		g.getBoard().setTile(1, 1, t3);
+		g.getBoard().setTile(1, 2, t2);
+		g.getBoard().setTile(1, 3, t1);
+		g.getBoard().setTile(2, 0, two);
+		g.getBoard().setTile(2, 1, t2);
+		g.getBoard().setTile(2, 2, t3);
+		g.getBoard().setTile(2, 3, t4);
+		g.getBoard().setTile(3, 0, four);
+		g.getBoard().setTile(3, 1, t2);
+		g.getBoard().setTile(3, 2, t3);
+		
+		g.moveHorizontal(1); //move right
+		assertFalse(g.getBoard().hasEmpty());
+		assertEquals(GameStatus.IN_PROGRESS, g.getStatus());
+	}
+	
+	//TODO
+	@Test
+	public void testNewTile1() {
+		
+	}
+	
+	//TODO
+	@Test
+	public void testNewTile2() {
+		
+	}
+	
+	@Test 
+	public void testMoveHorizontalLeft() {
+		GameController g = new GameController();
+		Tile t2 = new Tile(2);
+		Tile t4 = new Tile(4);
+		Tile t8 = new Tile(8);
+		Tile t16 = new Tile(16);
+		
+		g.getBoard().setTile(0, 0, t2);
+		g.getBoard().setTile(0, 1, t2);
+		g.getBoard().setTile(0, 2, t4);
+		g.getBoard().setTile(0, 3, t8);
+		
+		g.getBoard().setTile(1, 0, t8);
+		g.getBoard().setTile(1, 1, null);
+		g.getBoard().setTile(1, 2, t8);
+		g.getBoard().setTile(1, 3, t16);
+		
+		g.getBoard().setTile(2, 0, t16);
+		g.getBoard().setTile(2, 1, null);
+		g.getBoard().setTile(2, 2, t4);
+		g.getBoard().setTile(2, 3, t4);
+		
+		g.getBoard().setTile(3, 0, null);
+		g.getBoard().setTile(3, 1, null);
+		g.getBoard().setTile(3, 2, t4);
+		g.getBoard().setTile(3, 3, t8);
+		
+		g.moveHorizontal(-1);
+		
+		assertEquals(16, g.getBoard().getValue(0, 0));
+		assertEquals(32, g.getBoard().getValue(1, 0));
+		assertEquals(16, g.getBoard().getValue(2, 0));
+		assertEquals(8, g.getBoard().getValue(2, 1));
+		assertEquals(4, g.getBoard().getValue(3, 0));
+		assertEquals(8, g.getBoard().getValue(3, 1));	
+	}
+
+	@Test 
+	public void testMoveHorizontalRight() {
+		GameController g = new GameController();
+		Tile t2 = new Tile(2);
+		Tile t4 = new Tile(4);
+		Tile t8 = new Tile(8);
+		Tile t16 = new Tile(16);
+		
+		g.getBoard().setTile(0, 0, t2);
+		g.getBoard().setTile(0, 1, t2);
+		g.getBoard().setTile(0, 2, t4);
+		g.getBoard().setTile(0, 3, t8);
+		
+		g.getBoard().setTile(1, 0, t8);
+		g.getBoard().setTile(1, 1, null);
+		g.getBoard().setTile(1, 2, t8);
+		g.getBoard().setTile(1, 3, t16);
+		
+		g.getBoard().setTile(2, 0, t16);
+		g.getBoard().setTile(2, 1, null);
+		g.getBoard().setTile(2, 2, t4);
+		g.getBoard().setTile(2, 3, t4);
+		
+		g.getBoard().setTile(3, 0, null);
+		g.getBoard().setTile(3, 1, null);
+		g.getBoard().setTile(3, 2, t4);
+		g.getBoard().setTile(3, 3, t8);
+		
+		g.moveHorizontal(1);
+		
+		assertEquals(16, g.getBoard().getValue(0, 3));
+		assertEquals(32, g.getBoard().getValue(1, 3));
+		assertEquals(16, g.getBoard().getValue(2, 2));
+		assertEquals(8, g.getBoard().getValue(2, 3));
+		assertEquals(4, g.getBoard().getValue(3, 2));
+		assertEquals(8, g.getBoard().getValue(3, 3));	
+	}
+	
+	@Test 
+	public void testMoveVerticalUp() {
+		GameController g = new GameController();
+		Tile t2 = new Tile(2);
+		Tile t4 = new Tile(4);
+		Tile t8 = new Tile(8);
+		Tile t16 = new Tile(16);
+		
+		g.getBoard().setTile(0, 0, t2);
+		g.getBoard().setTile(1, 0, t2);
+		g.getBoard().setTile(2, 0, t4);
+		g.getBoard().setTile(3, 0, t8);
+		
+		g.getBoard().setTile(0, 1, null);
+		g.getBoard().setTile(1, 1, t2);
+		g.getBoard().setTile(2, 1, null);
+		g.getBoard().setTile(3, 1, t2);
+		
+		g.getBoard().setTile(0, 2, t2);
+		g.getBoard().setTile(1, 2, null);
+		g.getBoard().setTile(2, 2, t16);
+		g.getBoard().setTile(3, 2, t16);
+		
+		g.getBoard().setTile(0, 3, null);
+		g.getBoard().setTile(1, 3, null);
+		g.getBoard().setTile(2, 3, null);
+		g.getBoard().setTile(3, 3, t8);
+		
+		g.moveVertical(-1);
+		
+		assertEquals(16, g.getBoard().getValue(0, 0));
+		assertEquals(4, g.getBoard().getValue(0, 1));
+		assertEquals(2, g.getBoard().getValue(0, 2));
+		assertEquals(32, g.getBoard().getValue(1, 2));
+		assertEquals(8, g.getBoard().getValue(0, 3));	
+	}
+	
+	@Test 
+	public void testMoveVerticalDown() {
+		GameController g = new GameController();
+		Tile t2 = new Tile(2);
+		Tile t4 = new Tile(4);
+		Tile t8 = new Tile(8);
+		Tile t16 = new Tile(16);
+		
+		g.getBoard().setTile(0, 0, t2);
+		g.getBoard().setTile(1, 0, t2);
+		g.getBoard().setTile(2, 0, t4);
+		g.getBoard().setTile(3, 0, t8);
+		
+		g.getBoard().setTile(0, 1, null);
+		g.getBoard().setTile(1, 1, t2);
+		g.getBoard().setTile(2, 1, null);
+		g.getBoard().setTile(3, 1, t2);
+		
+		g.getBoard().setTile(0, 2, t2);
+		g.getBoard().setTile(1, 2, null);
+		g.getBoard().setTile(2, 2, t16);
+		g.getBoard().setTile(3, 2, t16);
+		
+		g.getBoard().setTile(0, 3, null);
+		g.getBoard().setTile(1, 3, null);
+		g.getBoard().setTile(2, 3, t8);
+		g.getBoard().setTile(3, 3, null);
+		
+		g.moveVertical(1);
+		
+		assertEquals(16, g.getBoard().getValue(3, 0));
+		assertEquals(4, g.getBoard().getValue(3, 1));
+		assertEquals(2, g.getBoard().getValue(2, 2));
+		assertEquals(32, g.getBoard().getValue(3, 2));
+		assertEquals(8, g.getBoard().getValue(3, 3));	
+	}
+	
+	//TODO
+	@Test 
+	public void testFindSimilarNeighbors1() {
+		GameController g = new GameController();
+		g.moveHorizontal(1);
+		assertEquals(GameStatus.IN_PROGRESS, g.getStatus());
+	}
+
     Tile test = new Tile();
 
     @Test
@@ -88,31 +447,31 @@ public class Test2048 {
         catch (IllegalArgumentException e){
             assertNotNull(e);
         }
-        assertEquals(-1, b.getValue(3,3));
-
-        try{
-            Board test2 = new Board(3);
-        }
-        catch (IllegalArgumentException e){
-            assertNotNull(e);
-        }
-        try{
-            Board test2 = new Board(11);
-        }
-        catch (IllegalArgumentException e){
-            assertNotNull(e);
-        }
+//        assertEquals(-1, b.getValue(3,3));
+//
+//        try{
+//            Board test2 = new Board(3);
+//        }
+//        catch (IllegalArgumentException e){
+//            assertNotNull(e);
+//        }
+//        try{
+//            Board test2 = new Board(11);
+//        }
+//        catch (IllegalArgumentException e){
+//            assertNotNull(e);
+//        }
 
         Board test2 = new Board(5);
 
-        for(int x = 1; x <= 5; x++){
-            for (int y = 1; y <= 5; y++){
+        for(int x = 0; x < 5; x++){
+            for (int y = 0; y < 5; y++){
                 test2.setTile(x,y,test);
             }
         }
 
         assertEquals(2,test2.getValue(1,1));
-        assertEquals(2,test2.getValue(5,5));
+        assertEquals(2,test2.getValue(4,4));
         try{
             test2.getValue(6,5);
         }
