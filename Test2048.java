@@ -95,7 +95,7 @@ public class Test2048 {
 	@Test
 	public void testCheckWin2() {
 		GameController g = new GameController();
-		Tile winner = new Tile(4096);
+		Tile winner = new Tile(2048);
 		g.getBoard().setTile(0, 0, winner);
 		g.moveHorizontal(1); //checkWin() called from here
 		assertEquals(GameStatus.WON, g.getStatus());
@@ -122,10 +122,12 @@ public class Test2048 {
 		g.getBoard().setTile(2, 1, t2);
 		g.getBoard().setTile(2, 2, t3);
 		g.getBoard().setTile(2, 3, t4);
-		g.getBoard().setTile(3, 0, t1);
-		g.getBoard().setTile(3, 1, t2);
-		g.getBoard().setTile(3, 2, t3);
-		
+		g.getBoard().setTile(3, 0, t4);
+		g.getBoard().setTile(3, 1, t3);
+		g.getBoard().setTile(3, 2, t2);
+		g.getBoard().setTile(3, 3, t1);
+
+
 		g.moveHorizontal(1); //move right
 		assertFalse(g.getBoard().hasEmpty());
 		assertEquals(GameStatus.LOST, g.getStatus());
@@ -192,6 +194,18 @@ public class Test2048 {
 		g.moveHorizontal(1); //move right
 		assertFalse(g.getBoard().hasEmpty());
 		assertEquals(GameStatus.IN_PROGRESS, g.getStatus());
+	}
+	@Test
+	public void testCheckNeighbor() {
+		GameController g = new GameController();
+		Tile t1 = new Tile(8);
+
+		g.getBoard().setTile(0, 1, t1);
+		g.getBoard().setTile(1, 1, t1);
+		g.getBoard().setTile(2, 1, t1);
+
+		g.moveHorizontal(1);
+
 	}
 	
 	//TODO
@@ -537,12 +551,23 @@ public class Test2048 {
         Board b = test.getBoard();
         assertEquals(b,test.getBoard());
     }
-    public void testCheckWin(){
-        GameController test = new GameController();
-        Tile t = new Tile(2048);
-        test.getBoard().setTile(0,0,t);
+	@Test
+	public void testReset(){
+		GameController test = new GameController();
+		Tile t1 = new Tile(4);
 
-    }
+		test.getBoard().setTile(0,1, t1);
+		test.getBoard().setTile(0,3, t1);
+		test.getBoard().setTile(2,0, t1);
+
+		test.reset();
+
+		assertEquals(-1,test.getBoard().getValue(0,1));
+		assertEquals(-1,test.getBoard().getValue(0,3));
+		assertEquals(-1,test.getBoard().getValue(2,0));
+
+
+	}
 
 
 
