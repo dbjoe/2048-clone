@@ -50,6 +50,7 @@ public class GameController {
 		winningValue = 2048;
 		r = new Random();
 		status = GameStatus.IN_PROGRESS;
+		boardChanged = false;
 		newTile();
 	}
 
@@ -63,6 +64,7 @@ public class GameController {
 		setWinningValue(winningValue);
 		r = new Random();
 		status = GameStatus.IN_PROGRESS;
+		boardChanged = false;
 		newTile();
 	}
 
@@ -437,13 +439,13 @@ public class GameController {
 	 * @param i the direction we are moving (-1 for up, 1 for down)
 	 *****************************************************************/
 	public void moveVertical(int i) {
-		boardChanged = false;
 		recurseVertical(0,i);
 
 		checkWin();
 		//TODO: getBoard.hasEmpty() check might be unnecessary
 		if (boardChanged && getBoard().hasEmpty()) {
 			newTile();
+			boardChanged = false;
 		}
 		checkLoss();
 	}
@@ -455,13 +457,13 @@ public class GameController {
 	 * @param i the direction we are moving (-1 for left, 1 for right)
 	 *****************************************************************/
 	public void moveHorizontal(int i) {
-		boardChanged = false;
 		recurseHorizontal(0,i);
 
 		checkWin();
 		//TODO: getBoard.hasEmpty() check might be unnecessary
 		if (boardChanged && getBoard().hasEmpty()) {
 			newTile();
+			boardChanged = false;
 		}
 		checkLoss();
 	}

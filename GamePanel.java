@@ -140,6 +140,7 @@ public class GamePanel extends JPanel{
 		game.setWinningValue(num);
 		game.setStatus(GameStatus.IN_PROGRESS);
 		setUpBoard(game);
+		game.newTile();
 
 		revalidate();
 		repaint();

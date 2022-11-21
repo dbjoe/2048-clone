@@ -551,23 +551,23 @@ public class Test2048 {
         Board b = test.getBoard();
         assertEquals(b,test.getBoard());
     }
-	@Test
-	public void testReset(){
-		GameController test = new GameController();
-		Tile t1 = new Tile(4);
-
-		test.getBoard().setTile(0,1, t1);
-		test.getBoard().setTile(0,3, t1);
-		test.getBoard().setTile(2,0, t1);
-
-		test.reset();
-
-		assertEquals(-1,test.getBoard().getValue(0,1));
-		assertEquals(-1,test.getBoard().getValue(0,3));
-		assertEquals(-1,test.getBoard().getValue(2,0));
-
-
-	}
+//	@Test
+//	public void testReset(){
+//		GameController test = new GameController();
+//		Tile t1 = new Tile(4);
+//
+//		test.getBoard().setTile(0,1, t1);
+//		test.getBoard().setTile(0,3, t1);
+//		test.getBoard().setTile(2,0, t1);
+//
+//		test.reset();
+//
+//		assertEquals(-1,test.getBoard().getValue(0,1));
+//		assertEquals(-1,test.getBoard().getValue(0,3));
+//		assertEquals(-1,test.getBoard().getValue(2,0));
+//
+//
+//	}
 
 
 
