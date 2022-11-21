@@ -36,7 +36,7 @@ public class Starter {
 		boolean numLoopAgain;
 		do {
 			numLoopAgain = false;
-			numInput = JOptionPane.showInputDialog(null, "Enter a power of 2 needed to win:");
+			numInput = JOptionPane.showInputDialog(null, "Enter a power of 2 (>=8) needed to win:");
 
 			if (numInput == null)
 				System.exit(0);
@@ -49,7 +49,7 @@ public class Starter {
 			}
 
 			Tile t = new Tile();
-			if (!t.power2(numToWin)) {
+			if (!t.power2(numToWin) || numToWin <8) {
 				numLoopAgain = true;
 				JOptionPane.showMessageDialog(null, "Please enter a valid power of 2 needed to win");
 			}
