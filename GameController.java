@@ -36,7 +36,11 @@ public class GameController {
 	 * The number of games won
 	 */
 	public static int numWins = 0;
-	
+	/**
+	 * Indicates whether the board has changed since the last move
+	 */
+	private boolean boardChanged;
+
 	/******************************************************************
 	 * Default constructor. Creates a 4x4 board with a value of
 	 * 2048 needed to win.
@@ -48,7 +52,7 @@ public class GameController {
 		status = GameStatus.IN_PROGRESS;
 		newTile();
 	}
-	
+
 	/******************************************************************
 	 * Parameterized constructor.
 	 * @param boardSize the length and width of the square board
@@ -61,7 +65,7 @@ public class GameController {
 		status = GameStatus.IN_PROGRESS;
 		newTile();
 	}
-	
+
 	/******************************************************************
 	 * Gets the Board instance variable
 	 * @return b, the Board instance variable
@@ -69,7 +73,7 @@ public class GameController {
 	public Board getBoard() {
 		return this.b;
 	}
-	
+
 	/******************************************************************
 	 * Sets the Board instance variable b
 	 * @throws IllegalArgumentException if parameter is null
@@ -80,7 +84,7 @@ public class GameController {
 		}
 		this.b = board;
 	}
-	
+
 	/******************************************************************
 	 * Gets the power of 2 needed to win
 	 * @return the power of 2 needed to win 
@@ -88,7 +92,7 @@ public class GameController {
 	public double getWinningValue(){
 		return this.winningValue;
 	}
-	
+
 	/******************************************************************
 	 * Sets the power of 2 needed to win
 	 * @param value the value needed to win the game
@@ -108,7 +112,7 @@ public class GameController {
 	public GameStatus getStatus() {
 		return this.status;
 	}
-	
+
 	/******************************************************************
 	 * Sets the status of the game - WON, LOST, or IN_PROGRESS
 	 * @param status can be WON, LOST, or IN_PROGRESS
@@ -120,7 +124,7 @@ public class GameController {
 		}
 		this.status = status;
 	}
-	
+
 	/******************************************************************
 	 * Gets the size of the board
 	 * @return the size of the board
@@ -129,7 +133,7 @@ public class GameController {
 		int b = getBoard().getBoardSize();
 		return b;
 	}
-	
+
 	/******************************************************************
 	 * Sets the board size
 	 * @param boardSize the size of the board
@@ -141,7 +145,7 @@ public class GameController {
 		}
 		getBoard().setBoardSize(boardSize);
 	}
-	
+
 	/******************************************************************
 	 * Creates a new tile with a value of either 2 or 4 and places it
 	 * at a random spot on the board
@@ -158,7 +162,7 @@ public class GameController {
 		else{
 			t = new Tile(4);
 		}
-		
+
 		do {
 			ranRow = r.nextInt(b.getBoardSize());
 			ranCol = r.nextInt(b.getBoardSize());
@@ -196,7 +200,7 @@ public class GameController {
 					}
 				}
 			}
-			
+
 			if (noNeighbor) {
 				status = GameStatus.LOST;
 			}
@@ -287,8 +291,8 @@ public class GameController {
 		if (direction == 1) {
 			startCol = b.getBoardSize()-2;
 		}
-		
-		
+
+
 		boolean again = false;
 		//If we're recursing left, we stop recursing when 
 		//col is equal to boardSize
@@ -317,6 +321,7 @@ public class GameController {
 				//if current tile has the same value as the previous
 				//tile, add them
 				if (current == prev) {
+					boardChanged = true;
 					Tile doubleTile = new Tile(2*current);
 					b.setTile(row, col+direction, doubleTile);
 					b.setTile(row, col, null);
@@ -326,6 +331,7 @@ public class GameController {
 				//If the previous tile is null, move our current tile
 				//to that location
 				if (prev == -1) {
+					boardChanged = true;
 					b.setTile(row, col+direction, b.getTile(row, col));
 					b.setTile(row, col, null);
 
@@ -398,6 +404,7 @@ public class GameController {
 				//if current tile has the same value as the previous
 				//tile, add them
 				if (current == prev) {
+					boardChanged = true;
 					Tile doubleTile = new Tile(2*current);
 					b.setTile(row+direction, col, doubleTile);
 					b.setTile(row, col, null);
@@ -407,6 +414,7 @@ public class GameController {
 				//If the previous tile is null, move our current tile
 				//to that location
 				if (prev == -1) {
+					boardChanged = true;
 					b.setTile(row+direction, col, b.getTile(row, col));
 					b.setTile(row, col, null);
 
@@ -429,10 +437,12 @@ public class GameController {
 	 * @param i the direction we are moving (-1 for up, 1 for down)
 	 *****************************************************************/
 	public void moveVertical(int i) {
+		boardChanged = false;
 		recurseVertical(0,i);
 
 		checkWin();
-		if(getBoard().hasEmpty()){//TODO: have to make sure it doesn't add for a move that changes nothing
+		//TODO: getBoard.hasEmpty() check might be unnecessary
+		if (boardChanged && getBoard().hasEmpty()) {
 			newTile();
 		}
 		checkLoss();
@@ -445,10 +455,12 @@ public class GameController {
 	 * @param i the direction we are moving (-1 for left, 1 for right)
 	 *****************************************************************/
 	public void moveHorizontal(int i) {
+		boardChanged = false;
 		recurseHorizontal(0,i);
 
 		checkWin();
-		if(getBoard().hasEmpty()){//TODO: have to make sure it doesn't add for a move that changes nothing
+		//TODO: getBoard.hasEmpty() check might be unnecessary
+		if (boardChanged && getBoard().hasEmpty()) {
 			newTile();
 		}
 		checkLoss();
