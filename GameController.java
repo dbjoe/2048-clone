@@ -153,7 +153,7 @@ public class GameController {
 		if (!b.hasEmpty()) {
 			throw new RuntimeException();
 		}
-		
+
 		int ranRow;
 		int ranCol;
 		int ranValue = r.nextInt(2);
@@ -173,7 +173,7 @@ public class GameController {
 
 		b.setTile(ranRow, ranCol, t);
 	}
-	
+
 	/******************************************************************
 	 * Resets the board to a starting state
 	 *****************************************************************/
@@ -455,12 +455,8 @@ public class GameController {
 
 		checkWin();
 		if (boardChanged) {
-			try {
-				newTile();
-				boardChanged = false;
-			} catch(RuntimeException e) {
-				
-			}
+			newTile();
+			boardChanged = false;
 		}
 		checkLoss();
 	}
@@ -476,12 +472,8 @@ public class GameController {
 
 		checkWin();
 		if (boardChanged) {
-			try {
-				newTile();
-				boardChanged = false;
-			} catch(RuntimeException e) {
-				
-			}
+			newTile();
+			boardChanged = false;
 		}
 		checkLoss();
 	}

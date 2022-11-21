@@ -195,6 +195,144 @@ public class Test2048 {
 		assertFalse(g.getBoard().hasEmpty());
 		assertEquals(GameStatus.IN_PROGRESS, g.getStatus());
 	}
+	
+	@Test
+	public void testCheckLoss4() {
+		GameController testController = new GameController();
+		Board b = new Board();
+		Tile tile2 = new Tile(2);
+		Tile tile8 = new Tile(8);
+		testController.setBoard(b);
+		b.setTile(0, 0, tile2);
+		b.setTile(0, 1, tile8);
+		b.setTile(0, 2, tile2);
+		b.setTile(0, 3, tile8);
+		b.setTile(1, 0, tile8);
+		b.setTile(1, 1, tile2);
+		b.setTile(1, 2, tile8);
+		b.setTile(1, 3, tile2);
+		b.setTile(2, 0, tile2);
+		b.setTile(2, 1, tile8);
+		b.setTile(2, 2, tile2);
+		b.setTile(2, 3, tile8);
+		b.setTile(3, 0, tile8);
+		b.setTile(3, 1, tile2);
+		b.setTile(3, 2, tile8);
+		b.setTile(3, 3, tile2);
+		testController.moveHorizontal(1);
+		assertEquals(testController.getStatus(), GameStatus.LOST);
+	}
+	@Test
+	public void testCheckLoss5() {
+		GameController testController = new GameController();
+		Board b = new Board();
+		Tile tile2 = new Tile(2);
+		Tile tile8 = new Tile(8);
+		testController.setBoard(b);
+		b.setTile(0, 0, tile2);
+		b.setTile(0, 1, tile8);
+		b.setTile(0, 2, tile2);
+		b.setTile(0, 3, tile8);
+		b.setTile(1, 0, tile8);
+		b.setTile(1, 1, tile2);
+		b.setTile(1, 2, tile8);
+		b.setTile(1, 3, tile2);
+		b.setTile(2, 0, tile2);
+		b.setTile(2, 1, tile8);
+		b.setTile(2, 2, tile2);
+		b.setTile(2, 3, tile8);
+		b.setTile(3, 0, tile8);
+		b.setTile(3, 1, tile2);
+		b.setTile(3, 2, tile8);
+		b.setTile(3, 3, tile2);
+		testController.moveHorizontal(-1);
+		assertEquals(testController.getStatus(), GameStatus.LOST);
+	}
+
+	@Test
+	public void testCheckLoss6() {
+		GameController testController = new GameController();
+		Board b = new Board();
+		Tile tile2 = new Tile(2);
+		Tile tile8 = new Tile(8);
+		testController.setBoard(b);
+		b.setTile(0, 0, tile2);
+		b.setTile(0, 1, tile8);
+		b.setTile(0, 2, tile2);
+		b.setTile(0, 3, tile8);
+		b.setTile(1, 0, tile8);
+		b.setTile(1, 1, tile2);
+		b.setTile(1, 2, tile8);
+		b.setTile(1, 3, tile2);
+		b.setTile(2, 0, tile2);
+		b.setTile(2, 1, tile8);
+		b.setTile(2, 2, tile2);
+		b.setTile(2, 3, tile8);
+		b.setTile(3, 0, tile8);
+		b.setTile(3, 1, tile2);
+		b.setTile(3, 2, tile8);
+		b.setTile(3, 3, tile2);
+		testController.moveVertical(-1);
+		assertEquals(testController.getStatus(), GameStatus.LOST);
+	}
+
+	@Test
+	public void testCheckLoss7() {
+		GameController testController = new GameController();
+		Board b = new Board();
+		Tile tile2 = new Tile(2);
+		Tile tile8 = new Tile(8);
+		testController.setBoard(b);
+		b.setTile(0, 0, tile2);
+		b.setTile(0, 1, tile8);
+		b.setTile(0, 2, tile2);
+		b.setTile(0, 3, tile8);
+		b.setTile(1, 0, tile8);
+		b.setTile(1, 1, tile2);
+		b.setTile(1, 2, tile8);
+		b.setTile(1, 3, tile2);
+		b.setTile(2, 0, tile2);
+		b.setTile(2, 1, tile8);
+		b.setTile(2, 2, tile2);
+		b.setTile(2, 3, tile8);
+		b.setTile(3, 0, tile8);
+		b.setTile(3, 1, tile2);
+		b.setTile(3, 2, tile8);
+		b.setTile(3, 3, tile2);
+		testController.moveVertical(-1);
+		assertEquals(testController.getStatus(), GameStatus.LOST);
+	}
+	@Test
+	public void testCheckLoss8() {
+		GameController testController = new GameController();
+		Board b = new Board();
+		Tile tile2 = new Tile(2);
+		Tile tile8 = new Tile(8);
+		testController.setBoard(b);
+		b.setTile(0, 0, tile2);
+		b.setTile(0, 1, tile8);
+		b.setTile(0, 2, tile2);
+		b.setTile(0, 3, tile8);
+		b.setTile(1, 0, tile8);
+		b.setTile(1, 1, tile2);
+		b.setTile(1, 2, tile8);
+		b.setTile(1, 3, tile2);
+		b.setTile(2, 0, tile2);
+		b.setTile(2, 1, tile8);
+		b.setTile(2, 2, tile2);
+		b.setTile(2, 3, tile8);
+		b.setTile(3, 0, tile8);
+		b.setTile(3, 1, tile2);
+		b.setTile(3, 2, tile8);
+		b.setTile(3, 3, tile2);
+		try{
+			testController.newTile();
+		}
+		catch (RuntimeException e) {
+			assertNotNull(e);
+		}
+	}
+	
 	@Test
 	public void testCheckNeighbor() {
 		GameController g = new GameController();
@@ -647,5 +785,17 @@ public class Test2048 {
 		testController.moveHorizontal(1);
 		assertEquals(b.getTile(0, 3).getValue(), 32);
 		assertEquals(b.getTile(0, 2).getValue(), 8);
+	}
+	
+	@Test
+	public void testReset() {
+		GameController g = new GameController();
+		Tile tile16 = new Tile(16);
+		Board board = new Board();
+		g.setBoard(board);
+		board.setTile(0, 3, tile16);
+		
+		g.reset();
+		assertEquals(g.getBoard().getValue(0, 3), -1);	
 	}
 }
