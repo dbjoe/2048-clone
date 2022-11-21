@@ -56,6 +56,9 @@ public class GamePanel extends JPanel{
 		MenuListener mListener = new MenuListener();
 		quit.addActionListener(mListener);
 		reset.addActionListener(mListener);
+		
+		addKeyListener(new MyKeyListener());
+		setFocusable(true); 
 
 		setUpBoard(game);
 		displayBoard();
@@ -122,9 +125,6 @@ public class GamePanel extends JPanel{
 
 		sidePanel.add(new JLabel("Games won: "));
 		sidePanel.add(numWinsLabel);
-
-		addKeyListener(new MyKeyListener());
-		setFocusable(true); 
 	}
 
 	private void reset() {
@@ -142,7 +142,6 @@ public class GamePanel extends JPanel{
 		setUpBoard(game);
 		game.newTile();
 
-		revalidate();
 		repaint();
 		displayBoard();
 	}
