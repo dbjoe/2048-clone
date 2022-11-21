@@ -459,8 +459,8 @@ public class GameController {
 	public void moveVertical(int i) {
 		recurseVertical(0,i);
 
+		checkWin();
 		if (boardChanged) {
-			checkWin();
 			try {
 				newTile();
 				boardChanged = false;
@@ -480,8 +480,8 @@ public class GameController {
 	public void moveHorizontal(int i) {
 		recurseHorizontal(0,i);
 
+		checkWin();
 		if (boardChanged) {
-			checkWin();
 			try {
 				newTile();
 				boardChanged = false;
