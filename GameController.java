@@ -173,6 +173,23 @@ public class GameController {
 
 		b.setTile(ranRow, ranCol, t);
 	}
+	
+	/******************************************************************
+	 * Resets the board to a starting state
+	 *****************************************************************/
+	public void reset() {
+		GameController.numGames++;
+
+		Starter s = new Starter();
+		int size = s.startBoard();
+		double num = s.startNumToWin();
+
+		Board b = new Board(size);
+		setBoard(b);
+		setWinningValue(num);
+		setStatus(GameStatus.IN_PROGRESS);
+		newTile();
+	}
 
 	/******************************************************************
 	 * Checks for a winning value in each tile of the board
@@ -450,8 +467,8 @@ public class GameController {
 			} catch(RuntimeException e) {
 				
 			}
-			checkLoss();
 		}
+		checkLoss();
 	}
 
 	/******************************************************************
@@ -471,8 +488,7 @@ public class GameController {
 			} catch(RuntimeException e) {
 				
 			}
-			
-			checkLoss();
 		}
+		checkLoss();
 	}
 }

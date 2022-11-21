@@ -127,7 +127,6 @@ public class Test2048 {
 		g.getBoard().setTile(3, 2, t2);
 		g.getBoard().setTile(3, 3, t1);
 
-
 		g.moveHorizontal(1); //move right
 		assertFalse(g.getBoard().hasEmpty());
 		assertEquals(GameStatus.LOST, g.getStatus());
@@ -389,7 +388,6 @@ public class Test2048 {
 		assertEquals(8, g.getBoard().getValue(3, 3));	
 	}
 
-	//TODO
 	@Test 
 	public void testFindSimilarNeighbors1() {
 		GameController g = new GameController();
