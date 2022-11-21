@@ -133,7 +133,8 @@ public class Test2048 {
 		assertEquals(GameStatus.LOST, g.getStatus());
 	}
 
-	//Fills the board and leaves no possible moves, but one tile has the winning value
+	//Fills the board and leaves no possible moves, but one tile
+	//has the winning value
 	@Test
 	public void testCheckLoss2() {
 		GameController g = new GameController();
@@ -208,16 +209,34 @@ public class Test2048 {
 
 	}
 
-	//TODO
 	@Test
 	public void testNewTile1() {
-
+		GameController g = new GameController();
+		g.newTile();
+		boolean theBoolean = false;
+		int tempInt;
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				tempInt = g.getBoard().getValue(i, j);
+				if (tempInt > 0) {
+					theBoolean = true;
+				}
+			}
+		}
+		assertTrue(theBoolean);
 	}
 
-	//TODO
 	@Test
+	(expected = RuntimeException.class)
 	public void testNewTile2() {
-
+		GameController g = new GameController();
+		Tile tester = new Tile(2);
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				g.getBoard().setTile(i,j,tester);
+			}
+		}
+		g.newTile();
 	}
 
 	@Test 
@@ -415,8 +434,8 @@ public class Test2048 {
 		Board b = new Board();
 		Tile t = new Tile(2);
 		b.setTile(1,1,test);
-		assertEquals(2, b.getValue(1,1));
-		assertNotEquals(2, b.getValue(0, 1));
+		assertEquals(t.getValue(), b.getValue(1,1));
+		assertNotEquals(t.getValue(), b.getValue(0, 1));
 	}
 
 	@Test
@@ -631,8 +650,4 @@ public class Test2048 {
 		assertEquals(b.getTile(0, 3).getValue(), 32);
 		assertEquals(b.getTile(0, 2).getValue(), 8);
 	}
-
-
-
-
 }
