@@ -2,10 +2,6 @@ package project3;
 
 import java.util.Random;
 
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-
 /**
  * A class that controls the 2048 game logic.
  * @author Gabe Kucinich, Zay Price, Joe Zylla
@@ -151,8 +147,13 @@ public class GameController {
 	/******************************************************************
 	 * Creates a new tile with a value of either 2 or 4 and places it
 	 * at a random spot on the board
+	 * @throws RuntimeException if the board is full
 	 *****************************************************************/
 	public void newTile(){
+		if (!b.hasEmpty()) {
+			throw new RuntimeException();
+		}
+		
 		int ranRow;
 		int ranCol;
 		int ranValue = r.nextInt(2);
@@ -441,13 +442,16 @@ public class GameController {
 	public void moveVertical(int i) {
 		recurseVertical(0,i);
 
-		checkWin();
-		//TODO: getBoard.hasEmpty() check might be unnecessary
-		if (boardChanged && getBoard().hasEmpty()) {
-			newTile();
-			boardChanged = false;
+		if (boardChanged) {
+			checkWin();
+			try {
+				newTile();
+				boardChanged = false;
+			} catch(RuntimeException e) {
+				
+			}
+			checkLoss();
 		}
-		checkLoss();
 	}
 
 	/******************************************************************
@@ -459,12 +463,16 @@ public class GameController {
 	public void moveHorizontal(int i) {
 		recurseHorizontal(0,i);
 
-		checkWin();
-		//TODO: getBoard.hasEmpty() check might be unnecessary
-		if (boardChanged && getBoard().hasEmpty()) {
-			newTile();
-			boardChanged = false;
+		if (boardChanged) {
+			checkWin();
+			try {
+				newTile();
+				boardChanged = false;
+			} catch(RuntimeException e) {
+				
+			}
+			
+			checkLoss();
 		}
-		checkLoss();
 	}
 }
