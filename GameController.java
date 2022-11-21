@@ -178,15 +178,9 @@ public class GameController {
 	 * Resets the board to a starting state
 	 *****************************************************************/
 	public void reset() {
-		GameController.numGames++;
-
-		Starter s = new Starter();
-		int size = s.startBoard();
-		double num = s.startNumToWin();
-
-		Board b = new Board(size);
+		Board b = new Board(getBoardSize());
 		setBoard(b);
-		setWinningValue(num);
+		setWinningValue(getWinningValue());
 		setStatus(GameStatus.IN_PROGRESS);
 		newTile();
 	}
