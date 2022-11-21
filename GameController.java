@@ -189,6 +189,21 @@ public class GameController {
 		}
 	}
 
+	public void reset() {
+		GameController.numGames++;
+
+		Starter s = new Starter();
+		int size = s.startBoard();
+		double num = s.startNumToWin();
+
+		Board b = new Board(size);
+		setBoard(b);
+		setWinningValue(num);
+		setStatus(GameStatus.IN_PROGRESS);
+		newTile();
+
+	}
+
 	/******************************************************************
 	 * Checks for a loss by determining if the board is full and there
 	 * are no more moves
